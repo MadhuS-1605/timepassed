@@ -6,6 +6,8 @@ A beautiful, modern web application to track time progression throughout the yea
 ![React](https://img.shields.io/badge/React-19.2.3-blue.svg)
 ![Vite](https://img.shields.io/badge/Vite-7.3.0-purple.svg)
 
+🌐 **Live Demo**: [https://timepassed.wtf](https://timepassed.wtf)
+
 ## ✨ Features
 
 ### 📊 Year Progress Tracker
@@ -327,8 +329,8 @@ Create powerful automations and quick access shortcuts for TimePassed on iOS usi
 
 1. Create a new shortcut
 2. Add action: **"Open URLs"**
-3. Enter: `https://your-domain.com/compare` (replace with your deployed URL)
-4. Or for local: `http://localhost:5173/compare`
+3. Enter: `https://timepassed.wtf/compare`
+4. Or for local development: `http://localhost:5173/compare`
 5. Name it "Compare Dates"
 
 **Usage**: Opens directly to the Compare page.
@@ -337,9 +339,8 @@ Create powerful automations and quick access shortcuts for TimePassed on iOS usi
 
 1. Create a new shortcut
 2. Add action: **"Share"**
-3. Add text: "Check out TimePassed - Track time beautifully!"
-4. Add your app URL
-5. Name it "Share TimePassed"
+3. Add text: "Check out TimePassed - Track time beautifully! https://timepassed.wtf"
+4. Name it "Share TimePassed"
 
 **Usage**: Quickly share the app with friends.
 

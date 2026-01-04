@@ -170,11 +170,31 @@ function Compare() {
     };
   };
 
-  // Compare Date Logic
-  const [compareDate, setCompareDate] = useState(null);
+  // Compare Date Logic - persisted in localStorage
+  const [compareDate, setCompareDate] = useState(() => {
+    const savedDate = localStorage.getItem('compareDate');
+    if (savedDate) {
+      try {
+        return dayjs(savedDate);
+      } catch (e) {
+        return null;
+      }
+    }
+    return null;
+  });
+  
   const [tempDate, setTempDate] = useState(null);
   let compareStats = null;
   let progressPercent = 0;
+  
+  // Save compareDate to localStorage whenever it changes
+  useEffect(() => {
+    if (compareDate && compareDate.isValid()) {
+      localStorage.setItem('compareDate', compareDate.toISOString());
+    } else if (compareDate === null) {
+      localStorage.removeItem('compareDate');
+    }
+  }, [compareDate]);
   
   if (compareDate && compareDate.isValid()) {
     const targetDate = compareDate.toDate();
