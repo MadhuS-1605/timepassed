@@ -27,7 +27,7 @@ export function AnimatedThemeToggler({ isDark, toggleTheme }) {
         animate={{
           scale: isDark ? 0 : 1,
           rotate: isDark ? 90 : 0,
-          opacity: isDark ? 0 : 1
+          opacity: isDark ? 0 : 1,
         }}
         transition={{ duration: 0.5, ease: "easeInOut" }}
         style={{ position: "absolute" }}
@@ -39,7 +39,7 @@ export function AnimatedThemeToggler({ isDark, toggleTheme }) {
         animate={{
           scale: isDark ? 1 : 0,
           rotate: isDark ? 0 : -90,
-          opacity: isDark ? 1 : 0
+          opacity: isDark ? 1 : 0,
         }}
         transition={{ duration: 0.5, ease: "easeInOut" }}
         style={{ position: "absolute" }}

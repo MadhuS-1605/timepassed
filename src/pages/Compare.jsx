@@ -1,124 +1,145 @@
 import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { renderMultiSectionDigitalClockTimeView } from '@mui/x-date-pickers/timeViewRenderers';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import dayjs from 'dayjs';
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { renderMultiSectionDigitalClockTimeView } from "@mui/x-date-pickers/timeViewRenderers";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import dayjs from "dayjs";
 import { AnimatedThemeToggler } from "@/registry/magicui/animated-theme-toggler";
 
 function Compare() {
   const [now, setNow] = useState(new Date());
-  
+
   // Theme State - persisted in localStorage
   const [mode, setMode] = useState(() => {
-    const savedMode = localStorage.getItem('theme');
-    return savedMode || 'dark';
+    const savedMode = localStorage.getItem("theme");
+    return savedMode || "dark";
   });
-  
+
   const toggleTheme = () => {
     setMode((prev) => {
-      const newMode = prev === 'dark' ? 'light' : 'dark';
-      localStorage.setItem('theme', newMode);
+      const newMode = prev === "dark" ? "light" : "dark";
+      localStorage.setItem("theme", newMode);
       return newMode;
     });
   };
 
-  const theme = useMemo(() => createTheme({
-    palette: {
-      mode,
-      ...(mode === 'dark' ? {
-        background: {
-          default: '#050505',
-          paper: '#1e1e1e',
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode,
+          ...(mode === "dark"
+            ? {
+                background: {
+                  default: "#050505",
+                  paper: "#1e1e1e",
+                },
+                text: {
+                  primary: "#ffffff",
+                  secondary: "#a0a0a0",
+                },
+              }
+            : {
+                background: {
+                  default: "#f8fafc",
+                  paper: "#ffffff",
+                },
+                text: {
+                  primary: "#0f172a",
+                  secondary: "#475569",
+                },
+              }),
         },
-        text: {
-            primary: '#ffffff',
-            secondary: '#a0a0a0',
-        }
-      } : {
-        background: {
-          default: '#f8fafc',
-          paper: '#ffffff',
+        typography: {
+          fontFamily: '"Montserrat", system-ui, sans-serif',
         },
-        text: {
-            primary: '#0f172a',
-            secondary: '#475569',
-        }
-      }),
-    },
-    typography: {
-      fontFamily: '"Montserrat", system-ui, sans-serif',
-    },
-    components: {
-      MuiOutlinedInput: {
-        styleOverrides: {
-          root: {
-            color: mode === 'dark' ? '#fff' : '#000',
-            backgroundColor: mode === 'dark' ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.03)',
-            borderRadius: '50px',
-            '& .MuiOutlinedInput-notchedOutline': {
-              borderColor: mode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-              borderRadius: '50px',
-            },
-            '&:hover .MuiOutlinedInput-notchedOutline': {
-                borderColor: mode === 'dark' ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)',
-            },
-          },
-        },
-      },
-      MuiInputLabel: {
-        styleOverrides: {
-          root: {
-            color: mode === 'dark' ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
-          },
-        },
-      },
-      MuiPickersDay: {
-        styleOverrides: {
-          root: {
-            color: mode === 'dark' ? '#94a3b8' : '#475569',
-            '&.Mui-selected': {
-              backgroundColor: '#22c55e !important',
-              color: '#000',
-            },
-            '&:hover': {
-                backgroundColor: 'rgba(34, 197, 94, 0.1)',
-            }
-          },
-        },
-      },
-      MuiDateCalendar: {
-        styleOverrides: {
-          root: {
-            backgroundColor: mode === 'dark' ? '#0f0f13' : '#fff',
-            color: mode === 'dark' ? '#fff' : '#000',
-          },
-        },
-      },
-      MuiMultiSectionDigitalClock: {
-          styleOverrides: {
+        components: {
+          MuiOutlinedInput: {
+            styleOverrides: {
               root: {
-                  backgroundColor: mode === 'dark' ? '#0f0f13' : '#fff',
-                  color: mode === 'dark' ? '#fff' : '#000',
-                  borderTop: mode === 'dark' ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(0,0,0,0.1)',
+                color: mode === "dark" ? "#fff" : "#000",
+                backgroundColor:
+                  mode === "dark"
+                    ? "rgba(255, 255, 255, 0.03)"
+                    : "rgba(0, 0, 0, 0.03)",
+                borderRadius: "50px",
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor:
+                    mode === "dark"
+                      ? "rgba(255, 255, 255, 0.1)"
+                      : "rgba(0, 0, 0, 0.1)",
+                  borderRadius: "50px",
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor:
+                    mode === "dark"
+                      ? "rgba(255, 255, 255, 0.2)"
+                      : "rgba(0, 0, 0, 0.2)",
+                },
+              },
+            },
+          },
+          MuiInputLabel: {
+            styleOverrides: {
+              root: {
+                color:
+                  mode === "dark"
+                    ? "rgba(255, 255, 255, 0.7)"
+                    : "rgba(0, 0, 0, 0.7)",
+              },
+            },
+          },
+          MuiPickersDay: {
+            styleOverrides: {
+              root: {
+                color: mode === "dark" ? "#94a3b8" : "#475569",
+                "&.Mui-selected": {
+                  backgroundColor: "#22c55e !important",
+                  color: "#000",
+                },
+                "&:hover": {
+                  backgroundColor: "rgba(34, 197, 94, 0.1)",
+                },
+              },
+            },
+          },
+          MuiDateCalendar: {
+            styleOverrides: {
+              root: {
+                backgroundColor: mode === "dark" ? "#0f0f13" : "#fff",
+                color: mode === "dark" ? "#fff" : "#000",
+              },
+            },
+          },
+          MuiMultiSectionDigitalClock: {
+            styleOverrides: {
+              root: {
+                backgroundColor: mode === "dark" ? "#0f0f13" : "#fff",
+                color: mode === "dark" ? "#fff" : "#000",
+                borderTop:
+                  mode === "dark"
+                    ? "1px solid rgba(255,255,255,0.1)"
+                    : "1px solid rgba(0,0,0,0.1)",
               },
               item: {
-                   color: mode === 'dark' ? '#94a3b8' : '#475569',
-                   '&:hover': {
-                       backgroundColor: 'rgba(34, 197, 94, 0.1)',
-                   },
-                   '&.Mui-selected': {
-                       backgroundColor: '#22c55e !important',
-                       color: '#000',
-                   }
-              }
-          }
-      }
-    },
-  }), [mode]);
+                color: mode === "dark" ? "#94a3b8" : "#475569",
+                "&:hover": {
+                  backgroundColor: "rgba(34, 197, 94, 0.1)",
+                },
+                "&.Mui-selected": {
+                  backgroundColor: "#22c55e !important",
+                  color: "#000",
+                },
+              },
+            },
+          },
+        },
+      }),
+    [mode]
+  );
 
   useEffect(() => {
     const timer = setInterval(() => setNow(new Date()), 50);
@@ -126,7 +147,7 @@ function Compare() {
   }, []);
 
   useEffect(() => {
-    document.body.classList.toggle('light-mode', mode === 'light');
+    document.body.classList.toggle("light-mode", mode === "light");
   }, [mode]);
 
   /* Wake Lock Logic */
@@ -134,18 +155,18 @@ function Compare() {
   const [isWakeLockActive, setIsWakeLockActive] = useState(false);
 
   const toggleWakeLock = async () => {
-    if ('wakeLock' in navigator) {
+    if ("wakeLock" in navigator) {
       if (wakeLock) {
         await wakeLock.release();
         setWakeLock(null);
         setIsWakeLockActive(false);
       } else {
         try {
-          const lock = await navigator.wakeLock.request('screen');
+          const lock = await navigator.wakeLock.request("screen");
           setWakeLock(lock);
           setIsWakeLockActive(true);
         } catch (err) {
-          console.error('Wake Lock error:', err);
+          console.error("Wake Lock error:", err);
         }
       }
     }
@@ -172,7 +193,7 @@ function Compare() {
 
   // Compare Date Logic - persisted in localStorage
   const [compareDate, setCompareDate] = useState(() => {
-    const savedDate = localStorage.getItem('compareDate');
+    const savedDate = localStorage.getItem("compareDate");
     if (savedDate) {
       try {
         return dayjs(savedDate);
@@ -182,25 +203,25 @@ function Compare() {
     }
     return null;
   });
-  
+
   const [tempDate, setTempDate] = useState(null);
   let compareStats = null;
   let progressPercent = 0;
-  
+
   // Save compareDate to localStorage whenever it changes
   useEffect(() => {
     if (compareDate && compareDate.isValid()) {
-      localStorage.setItem('compareDate', compareDate.toISOString());
+      localStorage.setItem("compareDate", compareDate.toISOString());
     } else if (compareDate === null) {
-      localStorage.removeItem('compareDate');
+      localStorage.removeItem("compareDate");
     }
   }, [compareDate]);
-  
+
   if (compareDate && compareDate.isValid()) {
     const targetDate = compareDate.toDate();
     const msDiff = targetDate - now;
     compareStats = calculateDerivedStats(msDiff);
-    
+
     // Calculate progress percentage (for future dates, show countdown; for past dates, show time passed)
     if (compareStats.isPast) {
       // For past dates, we can't show a meaningful progress bar, so just show 100%
@@ -226,57 +247,78 @@ function Compare() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      
+
       {/* Top Left Control: Wake Lock */}
-      <div style={{ position: 'absolute', top: '1rem', left: '1rem', zIndex: 50 }}>
-          <button 
-            onClick={toggleWakeLock}
+      <div
+        style={{ position: "absolute", top: "1rem", left: "1rem", zIndex: 50 }}
+      >
+        <button
+          onClick={toggleWakeLock}
+          style={{
+            background: "transparent",
+            border:
+              mode === "dark" ? "1px solid rgba(255,255,255,0.1)" : "none",
+            borderRadius: "50px",
+            padding: "0.5rem 1rem",
+            color: isWakeLockActive
+              ? "#22c55e"
+              : mode === "dark"
+              ? "#64748b"
+              : "#94a3b8",
+            cursor: "pointer",
+            fontSize: "0.8rem",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            transition: "all 0.3s",
+          }}
+        >
+          <span
             style={{
-                background: 'transparent',
-                border: mode === 'dark' ? '1px solid rgba(255,255,255,0.1)' : 'none',
-                borderRadius: '50px',
-                padding: '0.5rem 1rem',
-                color: isWakeLockActive ? '#22c55e' : (mode === 'dark' ? '#64748b' : '#94a3b8'),
-                cursor: 'pointer',
-                fontSize: '0.8rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                transition: 'all 0.3s'
+              width: "8px",
+              height: "8px",
+              borderRadius: "50%",
+              backgroundColor: isWakeLockActive
+                ? "#22c55e"
+                : mode === "dark"
+                ? "#64748b"
+                : "#94a3b8",
+              boxShadow: isWakeLockActive ? "0 0 10px #22c55e" : "none",
             }}
-          >
-            <span style={{ 
-                width: '8px', 
-                height: '8px', 
-                borderRadius: '50%', 
-                backgroundColor: isWakeLockActive ? '#22c55e' : (mode === 'dark' ? '#64748b' : '#94a3b8'),
-                boxShadow: isWakeLockActive ? '0 0 10px #22c55e' : 'none'
-            }}></span>
-            {isWakeLockActive ? 'Screen: ON' : 'Screen: Auto'}
-          </button>
+          ></span>
+          {isWakeLockActive ? "Screen: ON" : "Screen: Auto"}
+        </button>
       </div>
 
       {/* Top Right Control: Theme Toggle */}
-      <div style={{ 
-          position: 'absolute', 
-          top: '1rem', 
-          right: '1rem', 
+      <div
+        style={{
+          position: "absolute",
+          top: "1rem",
+          right: "1rem",
           zIndex: 50,
-      }}>
-          <AnimatedThemeToggler isDark={mode === 'dark'} toggleTheme={toggleTheme} />
+        }}
+      >
+        <AnimatedThemeToggler
+          isDark={mode === "dark"}
+          toggleTheme={toggleTheme}
+        />
       </div>
 
-      <div className={`page-content ${mode === 'light' ? 'light-mode' : ''}`}>
+      <div className={`page-content ${mode === "light" ? "light-mode" : ""}`}>
         {compareDate && compareDate.isValid() ? (
           <>
             {/* Year Progress Style Display for Compare Date */}
             <div className="year-progress card" style={{ fontSize: "2rem" }}>
-              <h1 className="glow-text" style={{ marginBottom: '0px', marginTop: '0px' }}>
+              <h1
+                className="glow-text"
+                style={{ marginBottom: "0px", marginTop: "0px" }}
+              >
                 {compareDate.format("DD/MM/YYYY")}
               </h1>
               <div
                 style={{
-                  color: mode === 'dark' ? "#94a3b8" : "#475569",
+                  color: mode === "dark" ? "#94a3b8" : "#475569",
                   letterSpacing: "0.1em",
                   textTransform: "uppercase",
                   fontSize: "1rem",
@@ -290,7 +332,8 @@ function Compare() {
                   fontSize: "4rem",
                   fontWeight: "bold",
                   margin: "1.5rem 0 0.5rem 0",
-                  background: "linear-gradient(to bottom right, #22c55e, #16a34a)",
+                  background:
+                    "linear-gradient(to bottom right, #22c55e, #16a34a)",
                   WebkitBackgroundClip: "text",
                   backgroundClip: "text",
                   WebkitTextFillColor: "transparent",
@@ -300,7 +343,7 @@ function Compare() {
               </div>
               <div
                 style={{
-                  color: mode === 'dark' ? "#94a3b8" : "#475569",
+                  color: mode === "dark" ? "#94a3b8" : "#475569",
                   letterSpacing: "0.1em",
                   textTransform: "uppercase",
                   fontSize: "0.9rem",
@@ -312,31 +355,57 @@ function Compare() {
             </div>
 
             {/* Stats Grid - 2x2 Layout */}
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(2, 1fr)",
-              gap: "1.5rem",
-              maxWidth: "800px",
-              margin: "0 auto",
-              width: "100%"
-            }}>
-              <StatCard label={compareStats.isPast ? "MINUTES PASSED" : "MINUTES REMAINING"} value={compareStats.totalMinutes} />
-              <StatCard label={compareStats.isPast ? "HOURS PASSED" : "HOURS REMAINING"} value={compareStats.totalHours} />
-              <StatCard label={compareStats.isPast ? "DAYS PASSED" : "DAYS REMAINING"} value={compareStats.totalDays} />
-              <StatCard label={compareStats.isPast ? "MONTHS PASSED" : "MONTHS REMAINING"} value={compareStats.totalMonths} />
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(2, 1fr)",
+                gap: "1.5rem",
+                maxWidth: "800px",
+                margin: "0 auto",
+                width: "100%",
+              }}
+            >
+              <StatCard
+                label={
+                  compareStats.isPast ? "MINUTES PASSED" : "MINUTES REMAINING"
+                }
+                value={compareStats.totalMinutes}
+              />
+              <StatCard
+                label={compareStats.isPast ? "HOURS PASSED" : "HOURS REMAINING"}
+                value={compareStats.totalHours}
+              />
+              <StatCard
+                label={compareStats.isPast ? "DAYS PASSED" : "DAYS REMAINING"}
+                value={compareStats.totalDays}
+              />
+              <StatCard
+                label={
+                  compareStats.isPast ? "MONTHS PASSED" : "MONTHS REMAINING"
+                }
+                value={compareStats.totalMonths}
+              />
             </div>
           </>
         ) : (
           /* Initial State - Show Title and Date Picker */
-          <div className="year-progress card" style={{ fontSize: "2rem", marginBottom: '3rem' }}>
-            <h1 className="glow-text" style={{ marginBottom: '0px', marginTop: '0px' }}>Compare Dates</h1>
+          <div
+            className="year-progress card"
+            style={{ fontSize: "2rem", marginBottom: "3rem" }}
+          >
+            <h1
+              className="glow-text"
+              style={{ marginBottom: "0px", marginTop: "0px" }}
+            >
+              Compare Dates
+            </h1>
             <div
               style={{
-                color: mode === 'dark' ? "#94a3b8" : "#475569",
+                color: mode === "dark" ? "#94a3b8" : "#475569",
                 letterSpacing: "0.1em",
                 textTransform: "uppercase",
                 fontSize: "1rem",
-                marginTop: '0.5rem'
+                marginTop: "0.5rem",
               }}
             >
               Calculate time difference
@@ -348,90 +417,108 @@ function Compare() {
         {!compareDate && (
           <div className="input-group">
             <div style={{ textAlign: "center", position: "relative" }}>
-               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                   <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center' }}>
-                       <DateTimePicker
-                           label="SELECT DATE & TIME"
-                           value={tempDate}
-                           onChange={(newValue) => setTempDate(newValue)}
-                           onAccept={(newValue) => {
-                             setCompareDate(newValue);
-                             setTempDate(null);
-                           }}
-                           onClose={() => setTempDate(null)}
-                           views={['year', 'month', 'day', 'hours', 'minutes']}
-                           format="DD-MM-YYYY HH:mm"
-                           ampm={false}
-                           closeOnSelect={false}
-                           timeSteps={{ minutes: 1 }}
-                           viewRenderers={{
-                              hours: renderMultiSectionDigitalClockTimeView,
-                              minutes: renderMultiSectionDigitalClockTimeView,
-                           }}
-                           slotProps={{
-                               textField: { 
-                                   fullWidth: false, 
-                                   className: 'pill-input',
-                                   style: { width: 320 }
-                               },
-                               actionBar: {
-                                   actions: ['accept', 'cancel']
-                               }
-                           }}
-                       />
-                   </div>
-               </LocalizationProvider>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "1rem",
+                    justifyContent: "center",
+                    flexWrap: "wrap",
+                    alignItems: "center",
+                  }}
+                >
+                  <DateTimePicker
+                    label="SELECT DATE & TIME"
+                    value={tempDate}
+                    onChange={(newValue) => setTempDate(newValue)}
+                    onAccept={(newValue) => {
+                      setCompareDate(newValue);
+                      setTempDate(null);
+                    }}
+                    onClose={() => setTempDate(null)}
+                    views={["year", "month", "day", "hours", "minutes"]}
+                    format="DD-MM-YYYY HH:mm"
+                    ampm={false}
+                    closeOnSelect={false}
+                    timeSteps={{ minutes: 1 }}
+                    viewRenderers={{
+                      hours: renderMultiSectionDigitalClockTimeView,
+                      minutes: renderMultiSectionDigitalClockTimeView,
+                    }}
+                    slotProps={{
+                      textField: {
+                        fullWidth: false,
+                        className: "pill-input",
+                        style: { width: 320 },
+                      },
+                      actionBar: {
+                        actions: ["accept", "cancel"],
+                      },
+                    }}
+                  />
+                </div>
+              </LocalizationProvider>
             </div>
           </div>
         )}
 
         {/* Bottom Navigation: Back to Home (left) and Reset (right) */}
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center',
-          marginTop: '3rem',
-          gap: '5rem',
-          flexWrap: 'wrap'
-        }}>
-          <Link 
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: "3rem",
+            gap: "5rem",
+            flexWrap: "wrap",
+          }}
+        >
+          <Link
             to="/"
             style={{
-                background: mode === 'dark' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(34, 197, 94, 0.15)',
-                border: mode === 'dark' ? '1px solid rgba(34, 197, 94, 0.3)' : 'none',
-                borderRadius: '50px',
-                padding: '1rem 2rem',
-                color: '#22c55e',
-                cursor: 'pointer',
-                fontSize: '1rem',
-                fontWeight: 600,
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                transition: 'all 0.3s',
-                textDecoration: 'none'
+              background:
+                mode === "dark"
+                  ? "rgba(34, 197, 94, 0.1)"
+                  : "rgba(34, 197, 94, 0.15)",
+              border:
+                mode === "dark" ? "1px solid rgba(34, 197, 94, 0.3)" : "none",
+              borderRadius: "50px",
+              padding: "1rem 2rem",
+              color: "#22c55e",
+              cursor: "pointer",
+              fontSize: "1rem",
+              fontWeight: 600,
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              transition: "all 0.3s",
+              textDecoration: "none",
             }}
           >
             Home
           </Link>
-          
+
           {compareDate && (
             <button
               onClick={() => setCompareDate(null)}
               style={{
-                background: mode === 'dark' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(239, 68, 68, 0.15)',
-                border: mode === 'dark' ? '1px solid rgba(239, 68, 68, 0.3)' : 'none',
-                borderRadius: '50px',
-                padding: '1rem 2rem',
-                color: '#ef4444',
-                cursor: 'pointer',
-                fontSize: '1rem',
+                background:
+                  mode === "dark"
+                    ? "rgba(239, 68, 68, 0.1)"
+                    : "rgba(239, 68, 68, 0.15)",
+                border:
+                  mode === "dark" ? "1px solid rgba(239, 68, 68, 0.3)" : "none",
+                borderRadius: "50px",
+                padding: "1rem 2rem",
+                color: "#ef4444",
+                cursor: "pointer",
+                fontSize: "1rem",
                 fontWeight: 600,
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                transition: 'all 0.3s',
-                textDecoration: 'none'
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                transition: "all 0.3s",
+                textDecoration: "none",
               }}
             >
               Reset
