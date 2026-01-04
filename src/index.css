@@ -1,0 +1,462 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  font-family: 'Montserrat', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #050505;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body:not(.light-mode) {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  background: radial-gradient(circle at 50% 10%, #111116 0%, #000000 100%);
+  overflow-x: hidden;
+}
+
+body.light-mode {
+  margin: 0;
+  display: flex !important;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: #f8fafc;
+  color: #0f172a;
+  overflow-x: hidden;
+}
+
+#root {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  width: 100%;
+}
+
+.card {
+  padding: 1rem;
+  overflow: visible;
+}
+
+
+.stat-value {
+  font-size: clamp(0.9rem, 2.5vw, 1.4rem);
+  font-weight: 700;
+  background: linear-gradient(to bottom right, #ffffff, #94a3b8);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.input-group {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    margin: 3rem 0;
+    flex-wrap: wrap;
+}
+
+/* Custom styles for React Datepicker */
+.custom-datepicker {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.2s;
+    cursor: pointer;
+    width: 280px;
+    text-align: center;
+}
+
+.custom-datepicker:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.custom-datepicker:focus {
+    border-color: #22c55e;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Overriding React Datepicker default themes for Dark Mode */
+.react-datepicker {
+    background-color: #0f0f13 !important;
+    border: 1px solid #333 !important;
+    font-family: 'Montserrat', sans-serif !important;
+    color: #e2e8f0 !important;
+}
+
+.react-datepicker__header {
+    background-color: #1a1a20 !important;
+    border-bottom: 1px solid #333 !important;
+}
+
+.react-datepicker__current-month, .react-datepicker-time__header, .react-datepicker-year-header {
+    color: #e2e8f0 !important;
+}
+
+.react-datepicker__day-name, .react-datepicker__day, .react-datepicker__time-name {
+    color: #cbd5e1 !important;
+}
+
+.react-datepicker__day:hover, .react-datepicker__month-text:hover, .react-datepicker__quarter-text:hover, .react-datepicker__year-text:hover {
+    background-color: #22c55e !important;
+    color: #000 !important;
+}
+
+.react-datepicker__day--selected, .react-datepicker__day--in-selecting-range, .react-datepicker__day--in-range,
+.react-datepicker__month-text--selected, .react-datepicker__month-text--in-selecting-range, .react-datepicker__month-text--in-range,
+.react-datepicker__quarter-text--selected, .react-datepicker__quarter-text--in-selecting-range, .react-datepicker__quarter-text--in-range,
+.react-datepicker__year-text--selected, .react-datepicker__year-text--in-selecting-range, .react-datepicker__year-text--in-range {
+    background-color: #22c55e !important;
+    color: #000 !important;
+}
+
+.react-datepicker__year-read-view--down-arrow,
+.react-datepicker__month-read-view--down-arrow,
+.react-datepicker__month-year-read-view--down-arrow {
+    border-top-color: #cbd5e1 !important;
+}
+
+/* Clean up the Year/Month dropdown buttons in the header */
+.react-datepicker__year-read-view--selected-year,
+.react-datepicker__month-read-view--selected-month,
+.react-datepicker__month-year-read-view--selected-month-year {
+    background: transparent !important;
+    border: none !important;
+    font-weight: 700 !important;
+    color: #fff !important;
+    font-size: 1.1rem;
+}
+
+.react-datepicker__year-read-view:hover .react-datepicker__year-read-view--selected-year,
+.react-datepicker__month-read-view:hover .react-datepicker__month-read-view--selected-month {
+    color: #22c55e !important;
+}
+
+/* Dropdown list container styling */
+/* Specific grid layout for Month Dropdown */
+.react-datepicker__month-dropdown {
+    background-color: #0f0f13 !important;
+    font-size: 0.9rem;
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    padding: 1rem;
+    width: 100% !important;
+    left: 0 !important;
+    top: 0 !important;
+    border: none !important;
+    position: absolute;
+    height: 100%;
+    z-index: 10;
+    align-content: start;
+}
+
+.react-datepicker__year-dropdown,
+.react-datepicker__month-year-dropdown {
+    background-color: #0f0f13 !important;
+    border: 1px solid #333 !important;
+    width: 100% !important;
+    left: 0 !important;
+    top: 0 !important;
+    border: none !important;
+    border-radius: 0;
+    box-shadow: none;
+    margin: 0;
+    position: absolute;
+    height: 100%;
+    z-index: 10;
+}
+
+.react-datepicker__year-option,
+.react-datepicker__month-year-option {
+    padding: 0.8rem 1rem !important;
+    color: #94a3b8 !important;
+    transition: all 0.2s;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.react-datepicker__month-option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem !important;
+    border-radius: 8px;
+    color: #94a3b8;
+    background: rgba(255,255,255,0.03);
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.react-datepicker__year-option:hover,
+.react-datepicker__month-year-option:hover {
+    background-color: rgba(34, 197, 94, 0.1) !important;
+    color: #22c55e !important;
+}
+
+.react-datepicker__month-option:hover {
+    background-color: #22c55e !important;
+    color: #000 !important;
+}
+
+/* Selected item in the list */
+.react-datepicker__year-option--selected_year,
+.react-datepicker__month-year-option--selected_month-year {
+    color: #22c55e !important;
+    font-weight: bold;
+    background: transparent !important;
+}
+
+.react-datepicker__month-option--selected_month {
+    background-color: #22c55e !important;
+    color: #000 !important;
+}
+
+.react-datepicker__year-option--selected {
+   display: block !important;
+   color: #22c55e;
+   font-size: 1rem;
+   margin-left: auto;
+}
+
+.react-datepicker__month-option--selected {
+   display: none !important;
+}
+
+.react-datepicker__header__dropdown {
+  margin: 1rem 0;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.year-progress {
+    margin-bottom: 4rem;
+    position: relative;
+    padding: 3rem 2rem;
+    overflow: hidden;
+}
+
+.year-percent {
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin: 1rem 0;
+    background: linear-gradient(to right, #22c55e, #10b981, #34d399);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-feature-settings: "tnum";
+    font-variant-numeric: tabular-nums;
+}
+
+.progress-bar-container {
+    height: 8px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 99px;
+    width: 100%;
+    margin-top: 2rem;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #22c55e, #10b981, #34d399);
+    transition: width 0.1s linear;
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.4);
+}
+
+.section-title {
+    margin-top: 4rem;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+}
+
+
+.glow-text {
+    text-shadow: 0 0 40px rgba(99, 102, 241, 0.3);
+}
+
+/* Force pill shape for the DatePicker input */
+.pill-input .MuiOutlinedInput-root,
+.pill-input .MuiPickersOutlinedInput-root,
+.pill-input .MuiInputBase-root {
+    border-radius: 50px !important;
+}
+
+.pill-input .MuiOutlinedInput-notchedOutline {
+    border-radius: 50px !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.pill-input:hover .MuiOutlinedInput-notchedOutline {
+    border-color: #22c55e !important;
+}
+
+/* RESPONSIVE STYLES */
+@media (max-width: 768px) {
+  #root {
+    padding: 1rem;
+  }
+
+  .year-progress {
+    padding: 2rem 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .year-percent {
+    font-size: 11vw; /* Reduced from 14vw to fit screen */
+    word-break: break-word; /* Prevent overflow */
+    line-height: 1.2;
+    padding: 0 1rem;
+  }
+
+  .year-progress div[style*="justify-content: space-between"] {
+      flex-direction: row; /* Keep in a row */
+      gap: 0.2rem;
+      font-size: 0.6rem !important; /* Small enough to fit */
+      align-items: center;
+  }
+  
+  .year-progress div[style*="justify-content: space-between"] span {
+      display: inline-block;
+      margin-bottom: 0;
+  }
+
+  .grid {
+    grid-template-columns: 1fr 1fr; /* 2 columns on mobile */
+    gap: 1rem;
+  }
+  
+  .grid > .card:first-child {
+      grid-column: 1 / -1; /* Make first item (Seconds) span full width */
+      border-bottom: 1px solid rgba(255,255,255,0.05); /* Optional alignment aid */
+      padding-bottom: 1.5rem;
+      margin-bottom: 0.5rem;
+  }
+  
+  .card {
+     padding: 0.75rem;
+  }
+
+  .row-items { /* If needed for date labels under progress bar */
+      flex-direction: column;
+      gap: 0.5rem;
+      align-items: center;
+      text-align: center;
+  }
+  
+  /* Make the date comparison input full width */
+  .pill-input {
+      width: 100% !important;
+  }
+  
+  .pill-input .MuiFormControl-root {
+      width: 100% !important;
+  }
+  
+  /* Hide the seconds/ms part of current time if too long? */
+}
+
+@media (max-width: 480px) {
+  /* On very small screens, maybe 1 column for stats? */
+  .grid {
+    grid-template-columns: 1fr 1fr; /* Keep 2 cols, stats are small */
+  }
+  
+  .stat-value {
+    font-size: 1.1rem;
+  }
+}
+
+/* LIGHT MODE OVERRIDES */
+body.light-mode .stat-value {
+    background: linear-gradient(to bottom right, #334155, #64748b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+body.light-mode .stat-label {
+    color: #64748b;
+}
+
+body.light-mode .card {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+body.light-mode .section-title {
+    color: #475569;
+}
+
+body.light-mode .section-title::after {
+    background: transparent; /* Remove line */
+}
+
+body.light-mode .pill-input .MuiOutlinedInput-notchedOutline {
+    border-color: transparent !important; /* Start with no border */
+    background: rgba(0,0,0,0.03); /* Slight background to indicate input area */
+}
+
+body.light-mode .pill-input:hover .MuiOutlinedInput-notchedOutline {
+    border-color: #22c55e !important;
+}
+
+body.light-mode .progress-bar-container {
+    background: rgba(0,0,0,0.1);
+}
+
+body.light-mode .glow-text {
+    text-shadow: none;
+    color: #0f172a;
+}
