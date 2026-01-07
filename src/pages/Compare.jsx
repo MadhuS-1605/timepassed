@@ -2,29 +2,16 @@ import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { renderMultiSectionDigitalClockTimeView } from "@mui/x-date-pickers/timeViewRenderers";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import dayjs from "dayjs";
 import { AnimatedThemeToggler } from "@/registry/magicui/animated-theme-toggler";
 
-function Compare() {
+function Compare({ mode, toggleTheme }) {
   const [now, setNow] = useState(new Date());
-
-  // Theme State - persisted in localStorage
-  const [mode, setMode] = useState(() => {
-    const savedMode = localStorage.getItem("theme");
-    return savedMode || "dark";
-  });
-
-  const toggleTheme = () => {
-    setMode((prev) => {
-      const newMode = prev === "dark" ? "light" : "dark";
-      localStorage.setItem("theme", newMode);
-      return newMode;
-    });
-  };
 
   const theme = useMemo(
     () =>
@@ -145,10 +132,6 @@ function Compare() {
     const timer = setInterval(() => setNow(new Date()), 50);
     return () => clearInterval(timer);
   }, []);
-
-  useEffect(() => {
-    document.body.classList.toggle("light-mode", mode === "light");
-  }, [mode]);
 
   /* Wake Lock Logic */
   const [wakeLock, setWakeLock] = useState(null);
@@ -421,41 +404,63 @@ function Compare() {
                 <div
                   style={{
                     display: "flex",
-                    gap: "1rem",
-                    justifyContent: "center",
-                    flexWrap: "wrap",
+                    flexDirection: "column",
                     alignItems: "center",
+                    gap: "1rem",
                   }}
                 >
-                  <DateTimePicker
-                    label="SELECT DATE & TIME"
+                  <DatePicker
+                    label="Select Date"
                     value={tempDate}
                     onChange={(newValue) => setTempDate(newValue)}
-                    onAccept={(newValue) => {
-                      setCompareDate(newValue);
-                      setTempDate(null);
-                    }}
-                    onClose={() => setTempDate(null)}
-                    views={["year", "month", "day", "hours", "minutes"]}
-                    format="DD-MM-YYYY HH:mm"
-                    ampm={false}
-                    closeOnSelect={false}
-                    timeSteps={{ minutes: 1 }}
-                    viewRenderers={{
-                      hours: renderMultiSectionDigitalClockTimeView,
-                      minutes: renderMultiSectionDigitalClockTimeView,
-                    }}
+                    views={["year", "month", "day"]}
+                    format="DD/MM/YYYY"
                     slotProps={{
                       textField: {
-                        fullWidth: false,
                         className: "pill-input",
-                        style: { width: 320 },
-                      },
-                      actionBar: {
-                        actions: ["accept", "cancel"],
+                        sx: { width: 300 },
                       },
                     }}
                   />
+                  {tempDate && (
+                    <TimePicker
+                      label="Select Time"
+                      value={tempDate}
+                      onChange={(newValue) => setTempDate(newValue)}
+                      views={["hours", "minutes"]}
+                      format="HH:mm"
+                      viewRenderers={{
+                        hours: renderMultiSectionDigitalClockTimeView,
+                        minutes: renderMultiSectionDigitalClockTimeView,
+                      }}
+                      slotProps={{
+                        textField: {
+                          className: "pill-input",
+                          sx: { width: 300 },
+                        },
+                      }}
+                    />
+                  )}
+                  <button
+                    onClick={() => tempDate && setCompareDate(tempDate)}
+                    disabled={!tempDate}
+                    style={{
+                      background: tempDate
+                        ? "#22c55e"
+                        : "rgba(255,255,255,0.1)",
+                      color: tempDate ? "#000" : "rgba(255,255,255,0.3)",
+                      border: "none",
+                      padding: "0.8rem 2rem",
+                      borderRadius: "50px",
+                      cursor: tempDate ? "pointer" : "not-allowed",
+                      fontSize: "1rem",
+                      fontWeight: 600,
+                      marginTop: "1rem",
+                      transition: "all 0.2s",
+                    }}
+                  >
+                    Calculate Difference
+                  </button>
                 </div>
               </LocalizationProvider>
             </div>
@@ -463,41 +468,16 @@ function Compare() {
         )}
 
         {/* Bottom Navigation: Back to Home (left) and Reset (right) */}
+        {/* Bottom Navigation: Reset (centered if present) */}
         <div
           style={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
             marginTop: "3rem",
-            gap: "5rem",
-            flexWrap: "wrap",
+            paddingBottom: "2rem",
           }}
         >
-          <Link
-            to="/"
-            style={{
-              background:
-                mode === "dark"
-                  ? "rgba(34, 197, 94, 0.1)"
-                  : "rgba(34, 197, 94, 0.15)",
-              border:
-                mode === "dark" ? "1px solid rgba(34, 197, 94, 0.3)" : "none",
-              borderRadius: "50px",
-              padding: "1rem 2rem",
-              color: "#22c55e",
-              cursor: "pointer",
-              fontSize: "1rem",
-              fontWeight: 600,
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              transition: "all 0.3s",
-              textDecoration: "none",
-            }}
-          >
-            Home
-          </Link>
-
           {compareDate && (
             <button
               onClick={() => setCompareDate(null)}
@@ -521,7 +501,7 @@ function Compare() {
                 textDecoration: "none",
               }}
             >
-              Reset
+              Reset Comparison
             </button>
           )}
         </div>

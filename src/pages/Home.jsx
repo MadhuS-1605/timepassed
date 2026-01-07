@@ -4,22 +4,8 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { AnimatedThemeToggler } from "@/registry/magicui/animated-theme-toggler";
 
-function Home() {
+function Home({ mode, toggleTheme }) {
   const [now, setNow] = useState(new Date());
-
-  // Theme State - persisted in localStorage
-  const [mode, setMode] = useState(() => {
-    const savedMode = localStorage.getItem("theme");
-    return savedMode || "dark";
-  });
-
-  const toggleTheme = () => {
-    setMode((prev) => {
-      const newMode = prev === "dark" ? "light" : "dark";
-      localStorage.setItem("theme", newMode);
-      return newMode;
-    });
-  };
 
   const theme = useMemo(
     () =>
@@ -166,10 +152,6 @@ function Home() {
     };
   };
 
-  useEffect(() => {
-    document.body.classList.toggle("light-mode", mode === "light");
-  }, [mode]);
-
   const currentStats = calculateDerivedStats(passedYearMs);
 
   /* Wake Lock Logic */
@@ -292,7 +274,10 @@ function Home() {
         />
       </div>
 
-      <div className={`page-content ${mode === "light" ? "light-mode" : ""}`}>
+      <div
+        className={`page-content ${mode === "light" ? "light-mode" : ""}`}
+        style={{ minHeight: "80vh", justifyContent: "center" }}
+      >
         <div className="year-progress card" style={{ fontSize: "2rem" }}>
           <h1
             className="glow-text"
@@ -330,11 +315,11 @@ function Home() {
               fontSize: "1rem",
             }}
           >
-            <span>{startOfYear.toLocaleDateString()}</span>
+            <span>{startOfYear.toLocaleDateString("en-GB")}</span>
             <span>
-              {now.toLocaleDateString()} {now.toLocaleTimeString()}
+              {now.toLocaleDateString("en-GB")} {now.toLocaleTimeString()}
             </span>
-            <span>{endOfYear.toLocaleDateString()}</span>
+            <span>{endOfYear.toLocaleDateString("en-GB")}</span>
           </div>
         </div>
 
@@ -346,33 +331,11 @@ function Home() {
           <StatCard label="Months Passed" value={currentStats.totalMonths} />
         </div>
 
-        <div style={{ textAlign: "center", marginTop: "3rem" }}>
-          <Link
-            to="/compare"
-            style={{
-              background:
-                mode === "dark"
-                  ? "rgba(34, 197, 94, 0.1)"
-                  : "rgba(34, 197, 94, 0.15)",
-              border:
-                mode === "dark" ? "1px solid rgba(34, 197, 94, 0.3)" : "none",
-              borderRadius: "50px",
-              padding: "1rem 2rem",
-              color: "#22c55e",
-              cursor: "pointer",
-              fontSize: "1rem",
-              fontWeight: 600,
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              transition: "all 0.3s",
-              textDecoration: "none",
-            }}
-          >
-            Compare Dates →
-          </Link>
-        </div>
+        <div style={{ paddingBottom: "2rem" }}></div>
       </div>
+      <style>{`
+        /* Add any extra page-specific styles here if needed */
+      `}</style>
     </ThemeProvider>
   );
 }

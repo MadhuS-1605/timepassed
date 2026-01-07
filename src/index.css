@@ -18,7 +18,8 @@
 body:not(.light-mode) {
   margin: 0;
   display: flex;
-  place-items: center;
+  align-items: flex-start; /* Start from top */
+  justify-content: center; /* Center horizontally */
   min-width: 320px;
   min-height: 100vh;
   background: radial-gradient(circle at 50% 10%, #111116 0%, #000000 100%);
@@ -28,7 +29,8 @@ body:not(.light-mode) {
 body.light-mode {
   margin: 0;
   display: flex !important;
-  place-items: center;
+  align-items: flex-start; /* Start from top */
+  justify-content: center; /* Center horizontally */
   min-width: 320px;
   min-height: 100vh;
   background-color: #f8fafc;
@@ -92,6 +94,14 @@ body.light-mode {
   cursor: pointer;
   width: 280px;
   text-align: center;
+}
+
+.page-content {
+  padding-bottom: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 3rem;
 }
 
 .custom-datepicker:hover {
@@ -275,15 +285,19 @@ body.light-mode {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1.5rem;
-  margin-top: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 1rem;
+  margin-top: 3rem;
+  width: 100%;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .year-progress {
-  margin-bottom: 4rem;
+  margin-bottom: 0rem;
   position: relative;
-  padding: 3rem 2rem;
+  padding: 0rem 0rem;
   overflow: hidden;
 }
 
@@ -318,7 +332,7 @@ body.light-mode {
 }
 
 .section-title {
-  margin-top: 4rem;
+  margin-top: 1rem;
   margin-bottom: 2rem;
   font-size: 1.5rem;
   font-weight: 600;
@@ -368,7 +382,7 @@ body.light-mode {
   }
 
   .year-percent {
-    font-size: 11vw; /* Reduced from 14vw to fit screen */
+    font-size: 10vw; /* Reduced from 11vw to fit screen */
     word-break: break-word; /* Prevent overflow */
     line-height: 1.2;
     padding: 0 1rem;
