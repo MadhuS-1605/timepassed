@@ -70,9 +70,7 @@ function Life({ mode, toggleTheme }) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <div
-        className={`page-content ${mode === "light" ? "light-mode" : ""}`}
-      >
+      <div className={`page-content ${mode === "light" ? "light-mode" : ""}`}>
         <div
           style={{
             position: "absolute",
@@ -136,6 +134,7 @@ function Life({ mode, toggleTheme }) {
                       onChange={(newValue) => setTempDate(newValue)}
                       views={["hours", "minutes"]}
                       format="HH:mm"
+                      timeSteps={{ minutes: 1 }}
                       viewRenderers={{
                         hours: renderMultiSectionDigitalClockTimeView,
                         minutes: renderMultiSectionDigitalClockTimeView,

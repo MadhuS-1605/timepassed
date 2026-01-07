@@ -429,6 +429,7 @@ function Compare({ mode, toggleTheme }) {
                       onChange={(newValue) => setTempDate(newValue)}
                       views={["hours", "minutes"]}
                       format="HH:mm"
+                      timeSteps={{ minutes: 1 }}
                       viewRenderers={{
                         hours: renderMultiSectionDigitalClockTimeView,
                         minutes: renderMultiSectionDigitalClockTimeView,

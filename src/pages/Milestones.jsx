@@ -92,9 +92,7 @@ function Milestones({ mode, toggleTheme }) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <div
-        className={`page-content ${mode === "light" ? "light-mode" : ""}`}
-      >
+      <div className={`page-content ${mode === "light" ? "light-mode" : ""}`}>
         <div
           style={{
             position: "absolute",
@@ -135,7 +133,13 @@ function Milestones({ mode, toggleTheme }) {
           </div>
         ) : (
           <div
-            style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+              gap: "1.5rem",
+              width: "100%",
+              maxWidth: "800px",
+            }}
           >
             {milestones.map((m, i) => (
               <div
