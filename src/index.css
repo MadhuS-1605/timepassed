@@ -378,7 +378,7 @@ body.light-mode {
 
   .year-progress {
     padding: 2rem 1rem;
-    margin-bottom: 2rem;
+    margin-bottom: 0rem;
   }
 
   .year-percent {

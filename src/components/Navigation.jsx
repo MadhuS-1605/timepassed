@@ -56,7 +56,8 @@ function Navigation({ mode }) {
           }
           .nav-item {
             padding: 0.4rem 0rem; 
-            width: 72px;
+            width: 17vw;
+            max-width: 72px;
             display: flex;
             flex-direction: column;
             align-items: center;
