@@ -178,6 +178,7 @@ function Events({ mode, toggleTheme }) {
                   value={newDate}
                   onChange={(val) => setNewDate(val)}
                   format="HH:mm"
+                  timeSteps={{ minutes: 1 }}
                   viewRenderers={{
                     hours: renderMultiSectionDigitalClockTimeView,
                     minutes: renderMultiSectionDigitalClockTimeView,

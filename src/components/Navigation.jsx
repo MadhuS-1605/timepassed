@@ -8,6 +8,10 @@ import {
   Map,
   GitCompare,
   MoreHorizontal,
+  Lock,
+  CheckCircle2,
+  PieChart,
+  Globe,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -33,6 +37,10 @@ function Navigation({ mode }) {
   const moreItems = [
     { path: "/compare", icon: GitCompare, label: "Compare" },
     { path: "/milestones", icon: Map, label: "Travel" },
+    { path: "/vault", icon: Lock, label: "Vault" },
+    { path: "/habits", icon: CheckCircle2, label: "Habits" },
+    { path: "/audit", icon: PieChart, label: "Audit" },
+    { path: "/world", icon: Globe, label: "World" },
   ];
 
   const finalNavItems = isDesktop
@@ -122,10 +130,13 @@ function Navigation({ mode }) {
                     : "rgba(255, 255, 255, 0.9)",
                 backdropFilter: "blur(25px) saturate(200%)",
                 WebkitBackdropFilter: "blur(25px) saturate(200%)",
-                borderRadius: "50px",
-                padding: "0.5rem",
-                display: "flex",
+                borderRadius: "32px",
+                padding: "1rem",
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
                 gap: "0.5rem",
+                width: "max-content",
+                maxWidth: "90vw",
                 boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.2)",
                 zIndex: 1001,
                 border:

@@ -6,6 +6,10 @@ import Life from "./pages/Life";
 import Events from "./pages/Events";
 import Focus from "./pages/Focus";
 import Milestones from "./pages/Milestones";
+import Vault from "./pages/Vault";
+import Habits from "./pages/Habits";
+import Audit from "./pages/Audit";
+import World from "./pages/World";
 import Navigation from "./components/Navigation";
 import "./index.css";
 import { Analytics } from "@vercel/analytics/react";
@@ -54,6 +58,22 @@ function App() {
         <Route
           path="/milestones"
           element={<Milestones mode={mode} toggleTheme={toggleTheme} />}
+        />
+        <Route
+          path="/vault"
+          element={<Vault mode={mode} toggleTheme={toggleTheme} />}
+        />
+        <Route
+          path="/habits"
+          element={<Habits mode={mode} toggleTheme={toggleTheme} />}
+        />
+        <Route
+          path="/audit"
+          element={<Audit mode={mode} toggleTheme={toggleTheme} />}
+        />
+        <Route
+          path="/world"
+          element={<World mode={mode} toggleTheme={toggleTheme} />}
         />
       </Routes>
       <Navigation mode={mode} />
