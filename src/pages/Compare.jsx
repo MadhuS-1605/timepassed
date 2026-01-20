@@ -8,6 +8,9 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import dayjs from "dayjs";
 import { AnimatedThemeToggler } from "@/registry/magicui/animated-theme-toggler";
+import { Filesystem, Directory, Encoding } from "@capacitor/filesystem";
+import { Preferences } from "@capacitor/preferences";
+import { Pin } from "lucide-react";
 
 function Compare({ mode, toggleTheme }) {
   const [now, setNow] = useState(new Date());
@@ -190,14 +193,34 @@ function Compare({ mode, toggleTheme }) {
   let compareStats = null;
   let progressPercent = 0;
 
-  // Save compareDate to localStorage whenever it changes
-  useEffect(() => {
+  const pinToWidget = async () => {
     if (compareDate && compareDate.isValid()) {
-      localStorage.setItem("compareDate", compareDate.toISOString());
-    } else if (compareDate === null) {
-      localStorage.removeItem("compareDate");
+      try {
+        const data = JSON.stringify({
+          date: compareDate.toISOString(),
+        });
+
+        // Save to Filesystem (Documents/Data)
+        await Filesystem.writeFile({
+          path: "widget_compare.json",
+          data: data,
+          directory: Directory.Data, // generic storage
+          encoding: Encoding.UTF8,
+        });
+
+        // Also keep Preferences as backup/legacy
+        await Preferences.set({
+          key: "widget_compare",
+          value: data,
+        });
+
+        alert("Date pinned to widget!");
+      } catch (e) {
+        console.error("Error pinning", e);
+        alert("Failed to pin date: " + e.message);
+      }
     }
-  }, [compareDate]);
+  };
 
   if (compareDate && compareDate.isValid()) {
     const targetDate = compareDate.toDate();
@@ -481,33 +504,66 @@ function Compare({ mode, toggleTheme }) {
             alignItems: "center",
             marginTop: "3rem",
             paddingBottom: "2rem",
+            gap: "1rem", // Added gap
           }}
         >
           {compareDate && (
-            <button
-              onClick={() => setCompareDate(null)}
-              style={{
-                background:
-                  mode === "dark"
-                    ? "rgba(239, 68, 68, 0.1)"
-                    : "rgba(239, 68, 68, 0.15)",
-                border:
-                  mode === "dark" ? "1px solid rgba(239, 68, 68, 0.3)" : "none",
-                borderRadius: "50px",
-                padding: "1rem 2rem",
-                color: "#ef4444",
-                cursor: "pointer",
-                fontSize: "1rem",
-                fontWeight: 600,
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.5rem",
-                transition: "all 0.3s",
-                textDecoration: "none",
-              }}
-            >
-              Reset Comparison
-            </button>
+            <>
+              {/* Reset Button */}
+              <button
+                onClick={() => setCompareDate(null)}
+                style={{
+                  background:
+                    mode === "dark"
+                      ? "rgba(239, 68, 68, 0.1)"
+                      : "rgba(239, 68, 68, 0.15)",
+                  border:
+                    mode === "dark"
+                      ? "1px solid rgba(239, 68, 68, 0.3)"
+                      : "none",
+                  borderRadius: "50px",
+                  padding: "1rem 2rem",
+                  color: "#ef4444",
+                  cursor: "pointer",
+                  fontSize: "1rem",
+                  fontWeight: 600,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  transition: "all 0.3s",
+                }}
+              >
+                Reset Comparison
+              </button>
+
+              {/* Pin to Widget Button */}
+              <button
+                onClick={pinToWidget}
+                style={{
+                  background:
+                    mode === "dark"
+                      ? "rgba(34, 197, 94, 0.1)"
+                      : "rgba(34, 197, 94, 0.15)",
+                  border:
+                    mode === "dark"
+                      ? "1px solid rgba(34, 197, 94, 0.3)"
+                      : "none",
+                  borderRadius: "50px",
+                  padding: "1rem 2rem",
+                  color: "#22c55e",
+                  cursor: "pointer",
+                  fontSize: "1rem",
+                  fontWeight: 600,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  transition: "all 0.3s",
+                }}
+              >
+                <Pin size={18} />
+                Pin to Widget
+              </button>
+            </>
           )}
         </div>
       </div>

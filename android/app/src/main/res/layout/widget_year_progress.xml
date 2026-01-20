@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_background"
+    android:padding="16dp">
+
+    <!-- Top Section: Year and Label -->
+    <LinearLayout
+        android:id="@+id/header_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true">
+
+        <TextView
+            android:id="@+id/widget_year_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2026"
+            android:textColor="#FFFFFF"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="YEAR PROGRESS"
+            android:textColor="#64748b"
+            android:textSize="10sp"
+            android:letterSpacing="0.1"
+            android:layout_marginTop="4dp"
+            android:textAllCaps="true"/>
+    </LinearLayout>
+
+    <!-- Center Section: Percentage -->
+    <TextView
+        android:id="@+id/widget_percentage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="5.4837%"
+        android:textColor="#22c55e"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_below="@id/header_container"
+        android:layout_above="@id/widget_progress_bar"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="sans-serif-black"/>
+
+    <!-- Bottom Section: Progress Bar -->
+    <ProgressBar
+        android:id="@+id/widget_progress_bar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_above="@id/footer_container"
+        android:layout_marginBottom="16dp"
+        android:progressDrawable="@drawable/custom_progress_bar"
+        android:progress="50"
+        android:max="100" />
+
+    <!-- Footer Section: Dates -->
+    <LinearLayout
+        android:id="@+id/footer_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:id="@+id/widget_start_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="01/01/2026"
+            android:textColor="#64748b"
+            android:textSize="10sp"
+            android:gravity="start"/>
+
+        <TextView
+            android:id="@+id/widget_current_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="21/01/2026"
+            android:textColor="#64748b"
+            android:textSize="10sp"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/widget_end_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="01/01/2027"
+            android:textColor="#64748b"
+            android:textSize="10sp"
+            android:gravity="end"/>
+    </LinearLayout>
+
+</RelativeLayout>

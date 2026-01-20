@@ -27,6 +27,52 @@
             android:grantUriPermissions="true">
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
         </provider>
+
+        <receiver android:name=".YearProgressWidget" android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_year_progress_info" />
+        </receiver>
+
+
+
+        <!--
+        <receiver android:name=".EventsWidget" android:exported="true" android:label="Your Events">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_events_info" />
+        </receiver>
+
+        <service android:name=".EventsRemoteViewsService"
+                 android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <receiver android:name=".HabitsWidget" android:exported="true" android:label="Atomic Habits">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_habits_info" />
+        </receiver>
+
+        <service android:name=".HabitsRemoteViewsService"
+                 android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <receiver android:name=".CompareWidget" android:exported="true" android:label="Countdown">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_compare_info" />
+        </receiver>
+        -->
     </application>
 
     <!-- Permissions -->

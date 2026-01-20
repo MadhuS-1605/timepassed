@@ -10,6 +10,8 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { AnimatedThemeToggler } from "@/registry/magicui/animated-theme-toggler";
 import { Trash2, Plus, Calendar as CalendarIcon } from "lucide-react";
+import { Preferences } from "@capacitor/preferences";
+import { Filesystem, Directory, Encoding } from "@capacitor/filesystem";
 
 dayjs.extend(relativeTime);
 
@@ -58,6 +60,27 @@ function Events({ mode, toggleTheme }) {
 
   useEffect(() => {
     localStorage.setItem("savedEvents", JSON.stringify(events));
+
+    const saveData = async () => {
+      try {
+        const data = JSON.stringify(events);
+        // Write to file for Widget
+        await Filesystem.writeFile({
+          path: "widget_events.json",
+          data: data,
+          directory: Directory.Data,
+          encoding: Encoding.UTF8,
+        });
+        // Backup
+        await Preferences.set({
+          key: "widget_events",
+          value: data,
+        });
+      } catch (e) {
+        console.error("Widget Save Error", e);
+      }
+    };
+    saveData();
   }, [events]);
 
   const handleAddEvent = () => {

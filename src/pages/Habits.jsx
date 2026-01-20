@@ -4,6 +4,9 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { AnimatedThemeToggler } from "@/registry/magicui/animated-theme-toggler";
 import { Flame, CheckCircle2, Plus, Trash2, X } from "lucide-react";
 
+import { Preferences } from "@capacitor/preferences";
+import { Filesystem, Directory, Encoding } from "@capacitor/filesystem";
+
 function Habits({ mode, toggleTheme }) {
   const [habits, setHabits] = useState(() => {
     const saved = localStorage.getItem("habits");
@@ -15,6 +18,25 @@ function Habits({ mode, toggleTheme }) {
 
   useEffect(() => {
     localStorage.setItem("habits", JSON.stringify(habits));
+
+    const saveData = async () => {
+      try {
+        const data = JSON.stringify(habits);
+        await Filesystem.writeFile({
+          path: "widget_habits.json",
+          data: data,
+          directory: Directory.Data,
+          encoding: Encoding.UTF8,
+        });
+        await Preferences.set({
+          key: "widget_habits",
+          value: data,
+        });
+      } catch (e) {
+        console.error("Widget Save Error", e);
+      }
+    };
+    saveData();
   }, [habits]);
 
   const theme = useMemo(
