@@ -35,7 +35,7 @@ function Milestones({ mode, toggleTheme }) {
         },
         typography: { fontFamily: '"Montserrat", system-ui, sans-serif' },
       }),
-    [mode]
+    [mode],
   );
 
   const calculateMilestones = () => {
@@ -51,7 +51,7 @@ function Milestones({ mode, toggleTheme }) {
     const nextBillionMultiplier = Math.ceil(secondsAlive / billion);
     const nextBillionDate = birthDate.add(
       nextBillionMultiplier * billion,
-      "seconds"
+      "seconds",
     );
 
     // 10,000 Days
@@ -96,7 +96,7 @@ function Milestones({ mode, toggleTheme }) {
         <div
           style={{
             position: "absolute",
-            top: "1rem",
+            top: "calc(1rem + env(safe-area-inset-top))",
             right: "1rem",
             zIndex: 50,
           }}

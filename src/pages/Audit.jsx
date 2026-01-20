@@ -33,7 +33,7 @@ function Audit({ mode, toggleTheme }) {
         },
         typography: { fontFamily: '"Montserrat", system-ui, sans-serif' },
       }),
-    [mode]
+    [mode],
   );
 
   const totalUsed = Object.values(data).reduce((a, b) => a + b, 0);
@@ -56,7 +56,7 @@ function Audit({ mode, toggleTheme }) {
         <div
           style={{
             position: "absolute",
-            top: "1rem",
+            top: "calc(1rem + env(safe-area-inset-top))",
             right: "1rem",
             zIndex: 50,
           }}

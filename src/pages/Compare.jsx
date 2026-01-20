@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from "react";
-import { Link } from "react-router-dom";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -125,7 +124,7 @@ function Compare({ mode, toggleTheme }) {
           },
         },
       }),
-    [mode]
+    [mode],
   );
 
   useEffect(() => {
@@ -233,7 +232,12 @@ function Compare({ mode, toggleTheme }) {
 
       {/* Top Left Control: Wake Lock */}
       <div
-        style={{ position: "absolute", top: "1rem", left: "1rem", zIndex: 50 }}
+        style={{
+          position: "absolute",
+          top: "calc(1rem + env(safe-area-inset-top))",
+          left: "1rem",
+          zIndex: 50,
+        }}
       >
         <button
           onClick={toggleWakeLock}
@@ -246,8 +250,8 @@ function Compare({ mode, toggleTheme }) {
             color: isWakeLockActive
               ? "#22c55e"
               : mode === "dark"
-              ? "#64748b"
-              : "#94a3b8",
+                ? "#64748b"
+                : "#94a3b8",
             cursor: "pointer",
             fontSize: "0.8rem",
             display: "flex",
@@ -264,8 +268,8 @@ function Compare({ mode, toggleTheme }) {
               backgroundColor: isWakeLockActive
                 ? "#22c55e"
                 : mode === "dark"
-                ? "#64748b"
-                : "#94a3b8",
+                  ? "#64748b"
+                  : "#94a3b8",
               boxShadow: isWakeLockActive ? "0 0 10px #22c55e" : "none",
             }}
           ></span>
@@ -277,7 +281,7 @@ function Compare({ mode, toggleTheme }) {
       <div
         style={{
           position: "absolute",
-          top: "1rem",
+          top: "calc(1rem + env(safe-area-inset-top))",
           right: "1rem",
           zIndex: 50,
         }}

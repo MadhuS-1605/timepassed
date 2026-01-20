@@ -43,7 +43,7 @@ function Focus({ mode, toggleTheme }) {
   const [timeLeft, setTimeLeft] = useState(savedState?.timeLeft ?? 25 * 60);
   const [isActive, setIsActive] = useState(savedState?.isActive || false);
   const [customDuration, setCustomDuration] = useState(
-    savedState?.customDuration || { hours: 0, minutes: 30, seconds: 0 }
+    savedState?.customDuration || { hours: 0, minutes: 30, seconds: 0 },
   );
 
   const getTotalTime = (m) => {
@@ -79,7 +79,7 @@ function Focus({ mode, toggleTheme }) {
         },
         typography: { fontFamily: '"Montserrat", system-ui, sans-serif' },
       }),
-    [mode]
+    [mode],
   );
 
   // Save state to localStorage
@@ -231,7 +231,7 @@ function Focus({ mode, toggleTheme }) {
         <div
           style={{
             position: "absolute",
-            top: "1rem",
+            top: "calc(1rem + env(safe-area-inset-top))",
             right: "1rem",
             zIndex: 50,
           }}
@@ -293,8 +293,8 @@ function Focus({ mode, toggleTheme }) {
                     color: isSelected
                       ? "#000"
                       : mode === "dark"
-                      ? "#fff"
-                      : "#000",
+                        ? "#fff"
+                        : "#000",
                     border: "none",
                     padding: "0.5rem 1.2rem",
                     borderRadius: "25px",
@@ -472,8 +472,8 @@ function Focus({ mode, toggleTheme }) {
               {isActive
                 ? "Running"
                 : timeLeft === 0 || timeLeft === totalTimeRef.current
-                ? "Start"
-                : "Paused"}
+                  ? "Start"
+                  : "Paused"}
             </div>
           </div>
         </div>
@@ -490,18 +490,18 @@ function Focus({ mode, toggleTheme }) {
               background: isActive
                 ? "rgba(239, 68, 68, 0.1)"
                 : timeLeft === 0
-                ? "rgba(100, 116, 139, 0.1)" // Disabled greyish
-                : "rgba(34, 197, 94, 0.1)",
+                  ? "rgba(100, 116, 139, 0.1)" // Disabled greyish
+                  : "rgba(34, 197, 94, 0.1)",
               border: isActive
                 ? "1px solid rgba(239, 68, 68, 0.5)"
                 : timeLeft === 0
-                ? "1px solid rgba(100, 116, 139, 0.3)"
-                : "1px solid rgba(34, 197, 94, 0.5)",
+                  ? "1px solid rgba(100, 116, 139, 0.3)"
+                  : "1px solid rgba(34, 197, 94, 0.5)",
               color: isActive
                 ? "#ef4444"
                 : timeLeft === 0
-                ? "#64748b"
-                : "#22c55e",
+                  ? "#64748b"
+                  : "#22c55e",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",

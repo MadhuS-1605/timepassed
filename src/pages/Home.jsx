@@ -119,7 +119,7 @@ function Home({ mode, toggleTheme }) {
           },
         },
       }),
-    [mode]
+    [mode],
   );
 
   useEffect(() => {
@@ -176,7 +176,7 @@ function Home({ mode, toggleTheme }) {
         } catch (err) {
           console.error(`${err.name}, ${err.message}`);
           alert(
-            "Couldn't activate Always-On mode. Battery saver might be blocking it."
+            "Couldn't activate Always-On mode. Battery saver might be blocking it.",
           );
         }
       }
@@ -219,7 +219,12 @@ function Home({ mode, toggleTheme }) {
 
       {/* Top Left Control: Wake Lock */}
       <div
-        style={{ position: "absolute", top: "1rem", left: "1rem", zIndex: 50 }}
+        style={{
+          position: "absolute",
+          top: "calc(1rem + env(safe-area-inset-top))",
+          left: "1rem",
+          zIndex: 50,
+        }}
       >
         <button
           onClick={toggleWakeLock}
@@ -232,8 +237,8 @@ function Home({ mode, toggleTheme }) {
             color: isWakeLockActive
               ? "#22c55e"
               : mode === "dark"
-              ? "#64748b"
-              : "#94a3b8",
+                ? "#64748b"
+                : "#94a3b8",
             cursor: "pointer",
             fontSize: "0.8rem",
             display: "flex",
@@ -250,8 +255,8 @@ function Home({ mode, toggleTheme }) {
               backgroundColor: isWakeLockActive
                 ? "#22c55e"
                 : mode === "dark"
-                ? "#64748b"
-                : "#94a3b8",
+                  ? "#64748b"
+                  : "#94a3b8",
               boxShadow: isWakeLockActive ? "0 0 10px #22c55e" : "none",
             }}
           ></span>
@@ -263,7 +268,7 @@ function Home({ mode, toggleTheme }) {
       <div
         style={{
           position: "absolute",
-          top: "1rem",
+          top: "calc(1rem + env(safe-area-inset-top))",
           right: "1rem",
           zIndex: 50,
         }}

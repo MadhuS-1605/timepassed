@@ -57,7 +57,7 @@ function World({ mode, toggleTheme }) {
         },
         typography: { fontFamily: '"Montserrat", system-ui, sans-serif' },
       }),
-    [mode]
+    [mode],
   );
 
   const availableZones = useMemo(() => {
@@ -105,7 +105,7 @@ function World({ mode, toggleTheme }) {
         <div
           style={{
             position: "absolute",
-            top: "1rem",
+            top: "calc(1rem + env(safe-area-inset-top))",
             right: "1rem",
             zIndex: 50,
           }}
@@ -453,7 +453,7 @@ function World({ mode, toggleTheme }) {
                   .filter(
                     (z) =>
                       !zones.includes(z) &&
-                      z.toLowerCase().includes(searchTerm.toLowerCase())
+                      z.toLowerCase().includes(searchTerm.toLowerCase()),
                   )
                   .map((z) => (
                     <button
@@ -501,7 +501,7 @@ function World({ mode, toggleTheme }) {
                 {availableZones.filter(
                   (z) =>
                     !zones.includes(z) &&
-                    z.toLowerCase().includes(searchTerm.toLowerCase())
+                    z.toLowerCase().includes(searchTerm.toLowerCase()),
                 ).length === 0 && (
                   <div
                     style={{

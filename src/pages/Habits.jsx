@@ -34,7 +34,7 @@ function Habits({ mode, toggleTheme }) {
         },
         typography: { fontFamily: '"Montserrat", system-ui, sans-serif' },
       }),
-    [mode]
+    [mode],
   );
 
   const handleAddHabit = () => {
@@ -79,7 +79,7 @@ function Habits({ mode, toggleTheme }) {
           completedDates: newCompletedDates,
           streak: newStreak,
         };
-      })
+      }),
     );
   };
 
@@ -94,7 +94,7 @@ function Habits({ mode, toggleTheme }) {
         <div
           style={{
             position: "absolute",
-            top: "1rem",
+            top: "calc(1rem + env(safe-area-inset-top))",
             right: "1rem",
             zIndex: 50,
           }}

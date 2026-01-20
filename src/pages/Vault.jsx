@@ -52,7 +52,7 @@ function Vault({ mode, toggleTheme }) {
           },
         },
       }),
-    [mode]
+    [mode],
   );
 
   const handleAddCapsule = () => {
@@ -82,7 +82,7 @@ function Vault({ mode, toggleTheme }) {
         <div
           style={{
             position: "absolute",
-            top: "1rem",
+            top: "calc(1rem + env(safe-area-inset-top))",
             right: "1rem",
             zIndex: 50,
           }}
@@ -264,7 +264,7 @@ function Vault({ mode, toggleTheme }) {
                       {isUnlocked
                         ? "Unlocked"
                         : `Locked until ${dayjs(capsule.unlockDate).format(
-                            "DD/MM/YYYY"
+                            "DD/MM/YYYY",
                           )}`}
                     </div>
 

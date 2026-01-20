@@ -48,7 +48,7 @@ function Events({ mode, toggleTheme }) {
           },
         },
       }),
-    [mode]
+    [mode],
   );
 
   useEffect(() => {
@@ -92,7 +92,7 @@ function Events({ mode, toggleTheme }) {
 
     const days = Math.floor(absDiff / (1000 * 60 * 60 * 24));
     const hours = Math.floor(
-      (absDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      (absDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
     );
     const minutes = Math.floor((absDiff % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((absDiff % (1000 * 60)) / 1000);
@@ -107,7 +107,7 @@ function Events({ mode, toggleTheme }) {
         <div
           style={{
             position: "absolute",
-            top: "1rem",
+            top: "calc(1rem + env(safe-area-inset-top))",
             right: "1rem",
             zIndex: 50,
           }}

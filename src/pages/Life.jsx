@@ -51,7 +51,7 @@ function Life({ mode, toggleTheme }) {
           },
         },
       }),
-    [mode]
+    [mode],
   );
 
   const calculateLifeStats = () => {
@@ -74,7 +74,7 @@ function Life({ mode, toggleTheme }) {
         <div
           style={{
             position: "absolute",
-            top: "1rem",
+            top: "calc(1rem + env(safe-area-inset-top))",
             right: "1rem",
             zIndex: 50,
           }}
@@ -197,12 +197,12 @@ function Life({ mode, toggleTheme }) {
                           i < stats.weeksLived
                             ? "#22c55e"
                             : mode === "dark"
-                            ? "rgba(255,255,255,0.1)"
-                            : "rgba(0,0,0,0.1)",
+                              ? "rgba(255,255,255,0.1)"
+                              : "rgba(0,0,0,0.1)",
                         borderRadius: "1px",
                       }}
                     />
-                  )
+                  ),
                 )}
               </div>
 
