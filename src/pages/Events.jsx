@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -12,6 +12,7 @@ import { AnimatedThemeToggler } from "@/registry/magicui/animated-theme-toggler"
 import { Trash2, Plus, Calendar as CalendarIcon } from "lucide-react";
 import { Preferences } from "@capacitor/preferences";
 import { Capacitor } from "@capacitor/core";
+import useNotificationSound from "@/hooks/useNotificationSound";
 
 dayjs.extend(relativeTime);
 
@@ -30,6 +31,22 @@ function Events({ mode, toggleTheme }) {
   const [newTitle, setNewTitle] = useState("");
   const [newDate, setNewDate] = useState(null);
   const [isAdding, setIsAdding] = useState(false);
+
+  // Notification sound hook
+  const { playNotificationSound, warmUp } = useNotificationSound();
+
+  // Track which events have already triggered notifications
+  // Track which events have already triggered notifications
+  const notifiedEventsRef = useRef(
+    (() => {
+      try {
+        const saved = localStorage.getItem("notifiedEvents");
+        return saved ? new Set(JSON.parse(saved)) : new Set();
+      } catch {
+        return new Set();
+      }
+    })(),
+  );
 
   const theme = useMemo(
     () =>
@@ -58,10 +75,39 @@ function Events({ mode, toggleTheme }) {
     [mode],
   );
 
+  // Check for events that have just reached their time and play notification
+  const checkEventNotifications = useCallback(() => {
+    const currentTime = dayjs();
+
+    events.forEach((event) => {
+      const eventTime = dayjs(event.date);
+      const diff = eventTime.diff(currentTime, "second");
+
+      // If event is within 1 second of now and hasn't been notified
+      if (diff >= -1 && diff <= 1 && !notifiedEventsRef.current.has(event.id)) {
+        notifiedEventsRef.current.add(event.id);
+        playNotificationSound("event");
+
+        // Persist notified events
+        try {
+          localStorage.setItem(
+            "notifiedEvents",
+            JSON.stringify([...notifiedEventsRef.current]),
+          );
+        } catch (e) {
+          console.error("Error saving notified events:", e);
+        }
+      }
+    });
+  }, [events, playNotificationSound]);
+
   useEffect(() => {
-    const timer = setInterval(() => setNow(dayjs()), 100);
+    const timer = setInterval(() => {
+      setNow(dayjs());
+      checkEventNotifications();
+    }, 100);
     return () => clearInterval(timer);
-  }, []);
+  }, [checkEventNotifications]);
 
   useEffect(() => {
     localStorage.setItem("savedEvents", JSON.stringify(events));

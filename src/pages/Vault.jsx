@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -7,6 +7,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { AnimatedThemeToggler } from "@/registry/magicui/animated-theme-toggler";
 import { Lock, Unlock, Mail, Plus, Trash2 } from "lucide-react";
+import useNotificationSound from "@/hooks/useNotificationSound";
 
 function Vault({ mode, toggleTheme }) {
   const [capsules, setCapsules] = useState(() => {
@@ -19,14 +20,65 @@ function Vault({ mode, toggleTheme }) {
   const [isAdding, setIsAdding] = useState(false);
   const [now, setNow] = useState(dayjs());
 
+  // Notification sound hook
+  const { playNotificationSound } = useNotificationSound();
+
+  // Track which capsules have already triggered notifications
+  const notifiedCapsulesRef = useRef(
+    (() => {
+      try {
+        const saved = localStorage.getItem("notifiedCapsules");
+        return saved ? new Set(JSON.parse(saved)) : new Set();
+      } catch {
+        return new Set();
+      }
+    })(),
+  );
+
   useEffect(() => {
     localStorage.setItem("timeCapsules", JSON.stringify(capsules));
   }, [capsules]);
 
+  // Check for capsules that have just been unlocked and play notification
+  const checkCapsuleNotifications = useCallback(() => {
+    const currentTime = dayjs();
+
+    capsules.forEach((capsule) => {
+      const unlockTime = dayjs(capsule.unlockDate);
+      const isUnlocked = unlockTime.isBefore(currentTime);
+      const wasJustUnlocked =
+        unlockTime.diff(currentTime, "minute") >= -5 &&
+        unlockTime.diff(currentTime, "minute") <= 0;
+
+      // If capsule is unlocked and hasn't been notified
+      if (
+        isUnlocked &&
+        wasJustUnlocked &&
+        !notifiedCapsulesRef.current.has(capsule.id)
+      ) {
+        notifiedCapsulesRef.current.add(capsule.id);
+        playNotificationSound("vault");
+
+        // Persist notified capsules
+        try {
+          localStorage.setItem(
+            "notifiedCapsules",
+            JSON.stringify([...notifiedCapsulesRef.current]),
+          );
+        } catch (e) {
+          console.error("Error saving notified capsules:", e);
+        }
+      }
+    });
+  }, [capsules, playNotificationSound]);
+
   useEffect(() => {
-    const timer = setInterval(() => setNow(dayjs()), 1000 * 60); // Check every minute
+    const timer = setInterval(() => {
+      setNow(dayjs());
+      checkCapsuleNotifications();
+    }, 1000 * 60); // Check every minute
     return () => clearInterval(timer);
-  }, []);
+  }, [checkCapsuleNotifications]);
 
   const theme = useMemo(
     () =>

@@ -12,6 +12,7 @@ import {
   Armchair,
   Settings,
 } from "lucide-react";
+import useNotificationSound from "@/hooks/useNotificationSound";
 
 function Focus({ mode, toggleTheme }) {
   // Persistence Helper
@@ -45,6 +46,9 @@ function Focus({ mode, toggleTheme }) {
   const [customDuration, setCustomDuration] = useState(
     savedState?.customDuration || { hours: 0, minutes: 30, seconds: 0 },
   );
+
+  // Notification sound hook
+  const { playNotificationSound, warmUp } = useNotificationSound();
 
   const getTotalTime = (m) => {
     if (m === "short") return 5 * 60;
@@ -153,10 +157,11 @@ function Focus({ mode, toggleTheme }) {
       }, 1000);
     } else if (timeLeft === 0 && isActive) {
       setIsActive(false);
-      // Optional: Add audio notification here
+      // Play notification sound when timer completes
+      playNotificationSound("focus");
     }
     return () => clearInterval(interval);
-  }, [isActive, timeLeft]);
+  }, [isActive, timeLeft, playNotificationSound]);
 
   // Update title with timer
   useEffect(() => {
@@ -184,7 +189,11 @@ function Focus({ mode, toggleTheme }) {
     }
   };
 
-  const toggleTimer = () => setIsActive(!isActive);
+  const toggleTimer = () => {
+    // Warm up audio context on user interaction (needed for mobile)
+    warmUp();
+    setIsActive(!isActive);
+  };
 
   const resetTimer = () => {
     setIsActive(false);
