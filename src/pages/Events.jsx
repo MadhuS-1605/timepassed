@@ -13,6 +13,7 @@ import { Trash2, Plus, Calendar as CalendarIcon } from "lucide-react";
 import { Preferences } from "@capacitor/preferences";
 import { Capacitor } from "@capacitor/core";
 import useNotificationSound from "@/hooks/useNotificationSound";
+import { useNativeNotifications } from "@/hooks/useNativeNotifications";
 
 dayjs.extend(relativeTime);
 
@@ -34,6 +35,8 @@ function Events({ mode, toggleTheme }) {
 
   // Notification sound hook
   const { playNotificationSound, warmUp } = useNotificationSound();
+  const { scheduleNotification, cancelNotifications } =
+    useNativeNotifications();
 
   // Track which events have already triggered notifications
   // Track which events have already triggered notifications
@@ -133,18 +136,31 @@ function Events({ mode, toggleTheme }) {
   const handleAddEvent = () => {
     if (!newTitle || !newDate) return;
 
+    const newId = Date.now();
+    const eventDate = newDate.toISOString();
+
     // Sort events by date automatically
     const updatedEvents = [
       ...events,
       {
-        id: Date.now(),
+        id: newId,
         title: newTitle,
-        date: newDate.toISOString(),
+        date: eventDate,
         createdAt: new Date().toISOString(),
       },
     ].sort((a, b) => new Date(a.date) - new Date(b.date));
 
     setEvents(updatedEvents);
+
+    // Schedule native notification
+    scheduleNotification({
+      id: Math.floor(newId / 1000) % 2147483647, // Ensure int32 for Android
+      title: "Upcoming Event",
+      body: `It's time for: ${newTitle}`,
+      scheduleAt: newDate.toDate(),
+      channelId: "events",
+    });
+
     setNewTitle("");
     setNewDate(null);
     setIsAdding(false);
@@ -152,6 +168,8 @@ function Events({ mode, toggleTheme }) {
 
   const handleDeleteEvent = (id) => {
     setEvents(events.filter((e) => e.id !== id));
+    // Cancel native notification
+    cancelNotifications([Math.floor(id / 1000) % 2147483647]);
   };
 
   const getTimeDiff = (targetDate) => {

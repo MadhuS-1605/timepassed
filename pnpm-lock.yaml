@@ -11,6 +11,9 @@ patchedDependencies:
   '@capacitor/android':
     hash: 03f636820cb6abab69b257de2d818d4dde9c6237eb0e7930167f09c7e119a0f3
     path: patches/@capacitor__android.patch
+  '@capacitor/local-notifications':
+    hash: c2ad6c923d98b19d994da80df164c01101278cd433af0025db604e19f8208b44
+    path: patches/@capacitor__local-notifications.patch
   '@capacitor/preferences':
     hash: 1f46d2cdfab1cd69e83af410880bf042ad95c6f5a567969599e295d7f579c82c
     path: patches/@capacitor__preferences.patch
@@ -31,6 +34,9 @@ importers:
       '@capacitor/ios':
         specifier: ^8.0.1
         version: 8.0.1(@capacitor/core@8.0.1)
+      '@capacitor/local-notifications':
+        specifier: ^8.0.0
+        version: 8.0.0(patch_hash=c2ad6c923d98b19d994da80df164c01101278cd433af0025db604e19f8208b44)(@capacitor/core@8.0.1)
       '@capacitor/preferences':
         specifier: ^8.0.0
         version: 8.0.0(patch_hash=1f46d2cdfab1cd69e83af410880bf042ad95c6f5a567969599e295d7f579c82c)(@capacitor/core@8.0.1)
@@ -641,6 +647,11 @@ packages:
     resolution: {integrity: sha512-pDxwQtx3n07DBhRKFGvYh4g00ruIsT7HxPm6IIT+tJD8VuTNgwgWYmEOZzfHkG6mZuCe03KqCsuD+aVmg5Rctg==}
     peerDependencies:
       '@capacitor/core': ^8.0.0
+
+  '@capacitor/local-notifications@8.0.0':
+    resolution: {integrity: sha512-Jn2IJs13vhRyOUtYni7PIPdMDYMILb4uI/rRAi7PmGg2lnaKbM5aWBmHZWt0laTYyVApYIbCWmdgBqWx/IH4dQ==}
+    peerDependencies:
+      '@capacitor/core': '>=8.0.0'
 
   '@capacitor/preferences@8.0.0':
     resolution: {integrity: sha512-NsE7Srk9Zr0SxiVelHGiAJR7M238eyCD6dI/sDhu3ckKwFrXn8/GRyGr+SZcnGLlQKy948li8Pfcfr0dqxNf1g==}
@@ -4817,6 +4828,10 @@ snapshots:
       tslib: 2.8.1
 
   '@capacitor/ios@8.0.1(@capacitor/core@8.0.1)':
+    dependencies:
+      '@capacitor/core': 8.0.1
+
+  '@capacitor/local-notifications@8.0.0(patch_hash=c2ad6c923d98b19d994da80df164c01101278cd433af0025db604e19f8208b44)(@capacitor/core@8.0.1)':
     dependencies:
       '@capacitor/core': 8.0.1
 

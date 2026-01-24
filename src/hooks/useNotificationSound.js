@@ -205,14 +205,39 @@ export const useNotificationSound = () => {
    */
   const playNativeAlertSound = useCallback(
     async (type = "focus") => {
-      // 1. Always play the Web Audio version (closest to "no copyright" requirement)
+      // 1. On Web, prioritize the custom alarm.mp3 music
+      if (!Capacitor.isNativePlatform()) {
+        try {
+          console.log("Web: Playing custom alarm.mp3 using Web Audio API...");
+          const audioContext = getAudioContext();
+          if (audioContext.state === "suspended") await audioContext.resume();
+
+          const response = await fetch("/alarm.mp3");
+          const arrayBuffer = await response.arrayBuffer();
+          const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+          const source = audioContext.createBufferSource();
+          source.buffer = audioBuffer;
+
+          const gainNode = audioContext.createGain();
+          gainNode.gain.setValueAtTime(1.0, audioContext.currentTime);
+
+          source.connect(gainNode);
+          gainNode.connect(audioContext.destination);
+
+          source.start(0);
+          return true;
+        } catch (e) {
+          console.warn("Web: alarm.mp3 AudioContext playback failed", e);
+          return playNotificationSound(type); // Fallback to synthetic
+        }
+      }
+
+      // 2. On Native, play the synthetic chimes
       playNotificationSound(type);
 
-      // 2. On native platforms, try to play a dummy audio tag to trigger
-      // the system media channel, which might override silent switch if configured
       if (Capacitor.isNativePlatform()) {
         try {
-          // Short beep data URI to wake up the audio session
           const beep =
             "data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU";
           const audio = new Audio(beep);

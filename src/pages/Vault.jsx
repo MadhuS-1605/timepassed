@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import { AnimatedThemeToggler } from "@/registry/magicui/animated-theme-toggler";
 import { Lock, Unlock, Mail, Plus, Trash2 } from "lucide-react";
 import useNotificationSound from "@/hooks/useNotificationSound";
+import { useNativeNotifications } from "@/hooks/useNativeNotifications";
 
 function Vault({ mode, toggleTheme }) {
   const [capsules, setCapsules] = useState(() => {
@@ -22,6 +23,8 @@ function Vault({ mode, toggleTheme }) {
 
   // Notification sound hook
   const { playNotificationSound } = useNotificationSound();
+  const { scheduleNotification, cancelNotifications } =
+    useNativeNotifications();
 
   // Track which capsules have already triggered notifications
   const notifiedCapsulesRef = useRef(
@@ -110,14 +113,27 @@ function Vault({ mode, toggleTheme }) {
   const handleAddCapsule = () => {
     if (!newMessage || !unlockDate) return;
 
+    const newId = Date.now();
+    const unlockIso = unlockDate.toISOString();
+
     const newCapsule = {
-      id: Date.now(),
+      id: newId,
       message: newMessage,
-      unlockDate: unlockDate.toISOString(),
+      unlockDate: unlockIso,
       createdAt: new Date().toISOString(),
     };
 
     setCapsules([...capsules, newCapsule]);
+
+    // Schedule native notification
+    scheduleNotification({
+      id: Math.floor(newId / 1000) % 2147483647,
+      title: "Time Capsule Unlocked",
+      body: "A memory from the past is now available.",
+      scheduleAt: unlockDate.toDate(),
+      channelId: "vault",
+    });
+
     setNewMessage("");
     setUnlockDate(null);
     setIsAdding(false);
@@ -125,6 +141,7 @@ function Vault({ mode, toggleTheme }) {
 
   const handleDelete = (id) => {
     setCapsules(capsules.filter((c) => c.id !== id));
+    cancelNotifications([Math.floor(id / 1000) % 2147483647]);
   };
 
   return (

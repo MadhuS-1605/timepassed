@@ -13,6 +13,7 @@ import {
   Settings,
 } from "lucide-react";
 import useNotificationSound from "@/hooks/useNotificationSound";
+import { useNativeNotifications } from "@/hooks/useNativeNotifications";
 
 function Focus({ mode, toggleTheme }) {
   // Persistence Helper
@@ -44,11 +45,13 @@ function Focus({ mode, toggleTheme }) {
   const [timeLeft, setTimeLeft] = useState(savedState?.timeLeft ?? 25 * 60);
   const [isActive, setIsActive] = useState(savedState?.isActive || false);
   const [customDuration, setCustomDuration] = useState(
-    savedState?.customDuration || { hours: 0, minutes: 30, seconds: 0 },
+    savedState?.customDuration || { hours: "", minutes: "", seconds: "" },
   );
 
   // Notification sound hook
   const { playNotificationSound, warmUp } = useNotificationSound();
+  const { scheduleNotification, cancelNotifications } =
+    useNativeNotifications();
 
   const getTotalTime = (m) => {
     if (m === "short") return 5 * 60;
@@ -110,21 +113,25 @@ function Focus({ mode, toggleTheme }) {
         const s = parseInt(newDuration.seconds) || 0;
         const newTime = h * 3600 + m * 60 + s;
         setTimeLeft(newTime);
-        totalTimeRef.current = newTime || 1; // Safety for progress
+        totalTimeRef.current = newTime || 1;
       }
       return;
     }
 
-    let val = parseInt(value);
-    if (isNaN(val)) val = 0;
+    // Smart Zero Handling:
+    // If input is "05", parse it to 5.
+    // If input is "", make it "".
+    // If input is "50", make it 50.
 
-    // strict clamping
-    if (val < 0) val = 0;
-    if ((field === "minutes" || field === "seconds") && val > 59) val = 59;
-    if (field === "hours" && val > 23) val = 23;
+    let rawStr = String(value).replace(/[^\d]/g, "");
 
-    // Remove leading zeros if user is typing
-    const newDuration = { ...customDuration, [field]: val };
+    // Standard leading zero removal
+    if (rawStr.length > 1 && rawStr.startsWith("0")) {
+      rawStr = rawStr.replace(/^0+/, "");
+    }
+
+    // Update state directly with sanitized string (allowing empty)
+    const newDuration = { ...customDuration, [field]: rawStr };
     setCustomDuration(newDuration);
 
     if (timerMode === "custom" && !isActive) {
@@ -138,10 +145,25 @@ function Focus({ mode, toggleTheme }) {
   };
 
   const handleBlur = (field) => {
-    if (customDuration[field] === "") {
-      const newDuration = { ...customDuration, [field]: 0 };
-      setCustomDuration(newDuration);
-    }
+    let val = customDuration[field];
+    if (val === "" || val === undefined) return; // Keep it empty if user wants
+
+    // Ensure integer and clamp only if not empty
+    let num = parseInt(val) || 0;
+
+    if (field === "hours" && num > 23) num = 23;
+    if ((field === "minutes" || field === "seconds") && num > 59) num = 59;
+
+    const newDuration = { ...customDuration, [field]: num.toString() };
+    setCustomDuration(newDuration);
+
+    // Update total time ref
+    const h = parseInt(field === "hours" ? num : customDuration.hours) || 0;
+    const m = parseInt(field === "minutes" ? num : customDuration.minutes) || 0;
+    const s = parseInt(field === "seconds" ? num : customDuration.seconds) || 0;
+    const newTime = h * 3600 + m * 60 + s;
+    setTimeLeft(newTime);
+    totalTimeRef.current = newTime || 1;
   };
 
   // Update totalTimeRef when mode changes
@@ -174,12 +196,32 @@ function Focus({ mode, toggleTheme }) {
     };
   }, [timeLeft, isActive]);
 
+  // Keep Screen Awake while timer is running
+  useEffect(() => {
+    let wakeLock = null;
+    if (isActive) {
+      (async () => {
+        try {
+          if ("wakeLock" in navigator) {
+            wakeLock = await navigator.wakeLock.request("screen");
+          }
+        } catch (err) {
+          console.error("Wake Lock Error:", err);
+        }
+      })();
+    }
+    return () => {
+      if (wakeLock) wakeLock.release();
+    };
+  }, [isActive]);
+
   const switchMode = (newMode) => {
     setIsActive(false);
+    cancelNotifications([999]); // Cancel any pending timer notification
     setTimerMode(newMode);
 
     if (newMode === "custom") {
-      setCustomDuration({ hours: 0, minutes: 0, seconds: 0 });
+      setCustomDuration({ hours: "", minutes: "", seconds: "" });
       setTimeLeft(0);
       totalTimeRef.current = 1;
     } else {
@@ -192,13 +234,29 @@ function Focus({ mode, toggleTheme }) {
   const toggleTimer = () => {
     // Warm up audio context on user interaction (needed for mobile)
     warmUp();
+
+    if (!isActive) {
+      // Starting/Resuming: Schedule notification
+      scheduleNotification({
+        id: 999,
+        title: "Focus Session Complete",
+        body: "Great job! Break time is completed.",
+        scheduleAt: new Date(Date.now() + timeLeft * 1000),
+        channelId: "focus",
+      });
+    } else {
+      // Pausing: Cancel notification
+      cancelNotifications([999]);
+    }
+
     setIsActive(!isActive);
   };
 
   const resetTimer = () => {
     setIsActive(false);
+    cancelNotifications([999]); // Cancel any pending timer notification
     if (timerMode === "custom") {
-      setCustomDuration({ hours: 0, minutes: 0, seconds: 0 });
+      setCustomDuration({ hours: "", minutes: "", seconds: "" });
       setTimeLeft(0);
       totalTimeRef.current = 1;
     } else {
@@ -211,9 +269,9 @@ function Focus({ mode, toggleTheme }) {
   const calculateProgress = () => {
     if (
       timerMode === "custom" &&
-      customDuration.hours === 0 &&
-      customDuration.minutes === 0 &&
-      customDuration.seconds === 0
+      !customDuration.hours &&
+      !customDuration.minutes &&
+      !customDuration.seconds
     ) {
       return 0; // Show empty ring if no time set
     }
@@ -386,18 +444,14 @@ function Focus({ mode, toggleTheme }) {
                     {label}
                   </label>
                   <input
-                    type="number"
-                    value={customDuration[field]}
+                    type="text"
+                    inputMode="numeric"
+                    value={!customDuration[field] ? "" : customDuration[field]}
+                    placeholder="0"
                     onChange={(e) =>
                       handleCustomDurationChange(field, e.target.value)
                     }
                     onBlur={() => handleBlur(field)}
-                    onKeyDown={(e) =>
-                      ["e", "E", "+", "-", "."].includes(e.key) &&
-                      e.preventDefault()
-                    }
-                    min="0"
-                    max={field === "hours" ? "23" : "59"}
                     style={{
                       background: "transparent",
                       border:

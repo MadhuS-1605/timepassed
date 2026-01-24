@@ -13,8 +13,8 @@
     "@capacitor/android": "^8.0.1",
     "@capacitor/cli": "^8.0.1",
     "@capacitor/core": "^8.0.1",
-
     "@capacitor/ios": "^8.0.1",
+    "@capacitor/local-notifications": "^8.0.0",
     "@capacitor/preferences": "^8.0.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
@@ -46,7 +46,8 @@
     },
     "patchedDependencies": {
       "@capacitor/preferences": "patches/@capacitor__preferences.patch",
-      "@capacitor/android": "patches/@capacitor__android.patch"
+      "@capacitor/android": "patches/@capacitor__android.patch",
+      "@capacitor/local-notifications": "patches/@capacitor__local-notifications.patch"
     }
   }
 }
