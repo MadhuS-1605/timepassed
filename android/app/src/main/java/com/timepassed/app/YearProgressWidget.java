@@ -51,7 +51,7 @@ public class YearProgressWidget extends AppWidgetProvider {
         views.setTextViewText(R.id.widget_year_label, String.valueOf(year));
         
         // 2. Percentage (Large Green Text)
-        views.setTextViewText(R.id.widget_percentage, String.format(Locale.getDefault(), "%.7f%%", percentage));
+        views.setTextViewText(R.id.widget_percentage, String.format(Locale.getDefault(), "%.4f%%", percentage));
         
         // 3. Progress Bar
         views.setProgressBar(R.id.widget_progress_bar, 10000, (int) (percentage * 100), false);

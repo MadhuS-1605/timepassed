@@ -5,12 +5,17 @@ import { AnimatedThemeToggler } from "@/registry/magicui/animated-theme-toggler"
 import { Flame, CheckCircle2, Plus, Trash2, X } from "lucide-react";
 
 import { Preferences } from "@capacitor/preferences";
-import { Filesystem, Directory, Encoding } from "@capacitor/filesystem";
+import { Capacitor } from "@capacitor/core";
 
 function Habits({ mode, toggleTheme }) {
   const [habits, setHabits] = useState(() => {
-    const saved = localStorage.getItem("habits");
-    return saved ? JSON.parse(saved) : [];
+    try {
+      const saved = localStorage.getItem("habits");
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      console.error("Error parsing habits from localStorage:", e);
+      return [];
+    }
   });
 
   const [newHabit, setNewHabit] = useState("");
@@ -20,14 +25,12 @@ function Habits({ mode, toggleTheme }) {
     localStorage.setItem("habits", JSON.stringify(habits));
 
     const saveData = async () => {
+      // Only call native plugins on native platforms
+      if (!Capacitor.isNativePlatform()) return;
+
       try {
         const data = JSON.stringify(habits);
-        await Filesystem.writeFile({
-          path: "widget_habits.json",
-          data: data,
-          directory: Directory.Data,
-          encoding: Encoding.UTF8,
-        });
+        // Save to Preferences for Widget
         await Preferences.set({
           key: "widget_habits",
           value: data,

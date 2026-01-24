@@ -11,6 +11,7 @@ import Habits from "./pages/Habits";
 import Audit from "./pages/Audit";
 import World from "./pages/World";
 import Navigation from "./components/Navigation";
+import ErrorBoundary from "./components/ErrorBoundary";
 import "./index.css";
 import { Analytics } from "@vercel/analytics/react";
 
@@ -33,52 +34,54 @@ function App() {
   };
 
   return (
-    <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={<Home mode={mode} toggleTheme={toggleTheme} />}
-        />
-        <Route
-          path="/compare"
-          element={<Compare mode={mode} toggleTheme={toggleTheme} />}
-        />
-        <Route
-          path="/life"
-          element={<Life mode={mode} toggleTheme={toggleTheme} />}
-        />
-        <Route
-          path="/events"
-          element={<Events mode={mode} toggleTheme={toggleTheme} />}
-        />
-        <Route
-          path="/focus"
-          element={<Focus mode={mode} toggleTheme={toggleTheme} />}
-        />
-        <Route
-          path="/milestones"
-          element={<Milestones mode={mode} toggleTheme={toggleTheme} />}
-        />
-        <Route
-          path="/vault"
-          element={<Vault mode={mode} toggleTheme={toggleTheme} />}
-        />
-        <Route
-          path="/habits"
-          element={<Habits mode={mode} toggleTheme={toggleTheme} />}
-        />
-        <Route
-          path="/audit"
-          element={<Audit mode={mode} toggleTheme={toggleTheme} />}
-        />
-        <Route
-          path="/world"
-          element={<World mode={mode} toggleTheme={toggleTheme} />}
-        />
-      </Routes>
-      <Navigation mode={mode} />
-      <Analytics />
-    </Router>
+    <ErrorBoundary>
+      <Router>
+        <Routes>
+          <Route
+            path="/"
+            element={<Home mode={mode} toggleTheme={toggleTheme} />}
+          />
+          <Route
+            path="/compare"
+            element={<Compare mode={mode} toggleTheme={toggleTheme} />}
+          />
+          <Route
+            path="/life"
+            element={<Life mode={mode} toggleTheme={toggleTheme} />}
+          />
+          <Route
+            path="/events"
+            element={<Events mode={mode} toggleTheme={toggleTheme} />}
+          />
+          <Route
+            path="/focus"
+            element={<Focus mode={mode} toggleTheme={toggleTheme} />}
+          />
+          <Route
+            path="/milestones"
+            element={<Milestones mode={mode} toggleTheme={toggleTheme} />}
+          />
+          <Route
+            path="/vault"
+            element={<Vault mode={mode} toggleTheme={toggleTheme} />}
+          />
+          <Route
+            path="/habits"
+            element={<Habits mode={mode} toggleTheme={toggleTheme} />}
+          />
+          <Route
+            path="/audit"
+            element={<Audit mode={mode} toggleTheme={toggleTheme} />}
+          />
+          <Route
+            path="/world"
+            element={<World mode={mode} toggleTheme={toggleTheme} />}
+          />
+        </Routes>
+        <Navigation mode={mode} />
+        <Analytics />
+      </Router>
+    </ErrorBoundary>
   );
 }
 

@@ -8,8 +8,8 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import dayjs from "dayjs";
 import { AnimatedThemeToggler } from "@/registry/magicui/animated-theme-toggler";
-import { Filesystem, Directory, Encoding } from "@capacitor/filesystem";
 import { Preferences } from "@capacitor/preferences";
+import { Capacitor } from "@capacitor/core";
 import { Pin } from "lucide-react";
 
 function Compare({ mode, toggleTheme }) {
@@ -195,20 +195,18 @@ function Compare({ mode, toggleTheme }) {
 
   const pinToWidget = async () => {
     if (compareDate && compareDate.isValid()) {
+      // Only call native plugins on native platforms
+      if (!Capacitor.isNativePlatform()) {
+        alert("Widget pinning only works on mobile devices.");
+        return;
+      }
+
       try {
         const data = JSON.stringify({
           date: compareDate.toISOString(),
         });
 
-        // Save to Filesystem (Documents/Data)
-        await Filesystem.writeFile({
-          path: "widget_compare.json",
-          data: data,
-          directory: Directory.Data, // generic storage
-          encoding: Encoding.UTF8,
-        });
-
-        // Also keep Preferences as backup/legacy
+        // Save to Preferences for Widget
         await Preferences.set({
           key: "widget_compare",
           value: data,
