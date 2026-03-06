@@ -79,6 +79,53 @@ function Habits({ mode, toggleTheme }) {
 
   const getToday = () => new Date().toISOString().split("T")[0];
 
+  const stats = useMemo(() => {
+    let currentStreakTotal = 0;
+    let maxStreak = 0;
+    let totalHabitsFinished = 0;
+    let habitsFinishedThisWeek = 0;
+    let completedToday = 0;
+
+    const today = getToday();
+    const d = new Date();
+    d.setDate(d.getDate() - d.getDay()); // Sunday as start of week
+    const startOfWeek = d.toISOString().split("T")[0];
+
+    habits.forEach((h) => {
+      // Find current streak by using the habit's string
+      // Note: we can interpret 'current streak' as the sum of all individual current streaks
+      currentStreakTotal += h.streak || 0;
+      if ((h.streak || 0) > maxStreak) maxStreak = h.streak;
+
+      // Finished habits
+      totalHabitsFinished += (h.completedDates || []).length;
+
+      const finishedThisWeek = (h.completedDates || []).filter(
+        (dateStr) => dateStr >= startOfWeek,
+      ).length;
+      habitsFinishedThisWeek += finishedThisWeek;
+
+      if ((h.completedDates || []).includes(today)) {
+        completedToday++;
+      }
+    });
+
+    const completionRate =
+      habits.length > 0
+        ? Math.round((completedToday / habits.length) * 100)
+        : 0;
+
+    return {
+      currentStreakTotal,
+      maxStreak,
+      totalHabitsFinished,
+      habitsFinishedThisWeek,
+      completionRate,
+      completedToday,
+      totalHabits: habits.length,
+    };
+  }, [habits]);
+
   const toggleHabit = (id) => {
     const today = getToday();
     setHabits(
@@ -115,6 +162,17 @@ function Habits({ mode, toggleTheme }) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      <style>
+        {`
+          .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+          }
+          .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+          }
+        `}
+      </style>
       <div className={`page-content ${mode === "light" ? "light-mode" : ""}`}>
         <div
           style={{
@@ -131,6 +189,166 @@ function Habits({ mode, toggleTheme }) {
         </div>
 
         <div className="section-title">Atomic Habits</div>
+
+        {/* Stats Section */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: "0.5rem",
+            paddingBottom: "1rem",
+            marginBottom: "1rem",
+            width: "100%",
+            maxWidth: "600px",
+          }}
+        >
+          {/* Current Streak */}
+          <div
+            className="card"
+            style={{
+              padding: "1rem 0.5rem",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              alignItems: "center",
+              textAlign: "center",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "clamp(0.6rem, 2.5vw, 0.75rem)",
+                fontWeight: 700,
+                letterSpacing: "0.5px",
+                textTransform: "uppercase",
+                marginBottom: "1rem",
+                lineHeight: 1.4,
+                color: theme.palette.text.secondary,
+              }}
+            >
+              Current
+              <br />
+              Streak
+            </div>
+            <div
+              style={{
+                fontSize: "clamp(1.5rem, 6vw, 2.5rem)",
+                fontWeight: 800,
+                lineHeight: 1,
+                marginBottom: "0.5rem",
+                color: theme.palette.text.primary,
+              }}
+            >
+              {stats.currentStreakTotal}
+            </div>
+            <div
+              style={{
+                fontSize: "clamp(0.6rem, 2vw, 0.75rem)",
+                color: theme.palette.text.secondary,
+                opacity: 0.8,
+              }}
+            >
+              Best Streak: {stats.maxStreak}
+            </div>
+          </div>
+
+          {/* Habit Finished */}
+          <div
+            className="card"
+            style={{
+              padding: "1rem 0.5rem",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              alignItems: "center",
+              textAlign: "center",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "clamp(0.6rem, 2.5vw, 0.75rem)",
+                fontWeight: 700,
+                letterSpacing: "0.5px",
+                textTransform: "uppercase",
+                marginBottom: "1rem",
+                lineHeight: 1.4,
+                color: theme.palette.text.secondary,
+              }}
+            >
+              Habit
+              <br />
+              Finished
+            </div>
+            <div
+              style={{
+                fontSize: "clamp(1.5rem, 6vw, 2.5rem)",
+                fontWeight: 800,
+                lineHeight: 1,
+                marginBottom: "0.5rem",
+                color: theme.palette.text.primary,
+              }}
+            >
+              {stats.totalHabitsFinished}
+            </div>
+            <div
+              style={{
+                fontSize: "clamp(0.6rem, 2vw, 0.75rem)",
+                color: theme.palette.text.secondary,
+                opacity: 0.8,
+              }}
+            >
+              This week: {stats.habitsFinishedThisWeek}
+            </div>
+          </div>
+
+          {/* Completion Rate */}
+          <div
+            className="card"
+            style={{
+              padding: "1rem 0.5rem",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              alignItems: "center",
+              textAlign: "center",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "clamp(0.6rem, 2.5vw, 0.75rem)",
+                fontWeight: 700,
+                letterSpacing: "0.5px",
+                textTransform: "uppercase",
+                marginBottom: "1rem",
+                lineHeight: 1.4,
+                color: theme.palette.text.secondary,
+              }}
+            >
+              Completion
+              <br />
+              Rate
+            </div>
+            <div
+              style={{
+                fontSize: "clamp(1.5rem, 6vw, 2.5rem)",
+                fontWeight: 800,
+                lineHeight: 1,
+                marginBottom: "0.5rem",
+                color: theme.palette.text.primary,
+              }}
+            >
+              {stats.completionRate}%
+            </div>
+            <div
+              style={{
+                fontSize: "clamp(0.6rem, 2vw, 0.75rem)",
+                color: theme.palette.text.secondary,
+                opacity: 0.8,
+              }}
+            >
+              {stats.completedToday}/{stats.totalHabits} habits
+            </div>
+          </div>
+        </div>
 
         <div
           style={{

@@ -326,7 +326,7 @@ function Vault({ mode, toggleTheme }) {
                         color: isUnlocked
                           ? "#22c55e"
                           : theme.palette.text.secondary,
-                        marginBottom: "0.5rem",
+                        marginBottom: isUnlocked ? "0.5rem" : "0.25rem",
                         fontWeight: 600,
                       }}
                     >
@@ -336,7 +336,6 @@ function Vault({ mode, toggleTheme }) {
                             "DD/MM/YYYY",
                           )}`}
                     </div>
-
                     {isUnlocked ? (
                       <div
                         style={{
@@ -350,13 +349,53 @@ function Vault({ mode, toggleTheme }) {
                     ) : (
                       <div
                         style={{
-                          filter: "blur(4px)",
-                          userSelect: "none",
-                          opacity: 0.5,
+                          position: "relative",
+                          padding: "1rem 0",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
                         }}
                       >
-                        This message is hidden until the date arrives. Keep
-                        waiting!
+                        <div
+                          style={{
+                            filter: "blur(5px)",
+                            userSelect: "none",
+                            opacity: 0.3,
+                            width: "100%",
+                            textAlign: "center",
+                          }}
+                        >
+                          This message is hidden until the date arrives. Keep
+                          waiting!
+                        </div>
+                        <div
+                          style={{
+                            position: "absolute",
+                            fontSize: "1.2rem",
+                            color: "#f59e0b",
+                            fontWeight: 700,
+                            letterSpacing: "0.5px",
+                            textShadow:
+                              mode === "dark"
+                                ? "0 2px 8px rgba(0,0,0,0.9)"
+                                : "0 2px 8px rgba(255,255,255,0.9)",
+                            textAlign: "center",
+                            width: "100%",
+                            pointerEvents: "none",
+                          }}
+                        >
+                          ⏳{" "}
+                          {Math.max(
+                            0,
+                            dayjs(capsule.unlockDate).diff(now, "day"),
+                          )}{" "}
+                          days,{" "}
+                          {Math.max(
+                            0,
+                            dayjs(capsule.unlockDate).diff(now, "hour") % 24,
+                          )}{" "}
+                          hours
+                        </div>
                       </div>
                     )}
                     <div
