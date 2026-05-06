@@ -4,4 +4,6 @@
     <string name="title_activity_main">TimePassed</string>
     <string name="package_name">com.timepassed.app</string>
     <string name="custom_url_scheme">com.timepassed.app</string>
+    <string name="year_wallpaper_description">Live dot-grid wallpaper showing your year (or life) progress, updating daily.</string>
+    <string name="year_wallpaper_label">TimePassed Live</string>
 </resources>

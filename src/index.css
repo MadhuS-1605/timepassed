@@ -30,6 +30,15 @@ body:not(.light-mode) {
   padding-right: env(safe-area-inset-right);
 }
 
+/* AMOLED true-black: only applies in dark mode */
+body.oled-mode {
+  background: #000 !important;
+}
+body.oled-mode .card {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
 body.light-mode {
   margin: 0;
   display: flex !important;
@@ -295,7 +304,7 @@ body.light-mode {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
   gap: 1rem;
-  margin-top: 3rem;
+  margin-top: 1rem;
   width: 100%;
   max-width: 1100px;
   margin-left: auto;
@@ -314,10 +323,7 @@ body.light-mode {
   font-weight: 800;
   line-height: 1.1;
   margin: 1rem 0;
-  background: linear-gradient(to right, #22c55e, #10b981, #34d399);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--accent, #22c55e);
   font-feature-settings: "tnum";
   font-variant-numeric: tabular-nums;
 }
@@ -334,7 +340,7 @@ body.light-mode {
 
 .progress-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, #22c55e, #10b981, #34d399);
+  background: var(--accent, #22c55e);
   transition: width 0.1s linear;
   box-shadow: 0 0 20px rgba(34, 197, 94, 0.4);
 }

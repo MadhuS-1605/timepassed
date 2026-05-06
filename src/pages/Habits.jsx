@@ -1,66 +1,25 @@
 import { useState, useEffect, useMemo } from "react";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
-import { AnimatedThemeToggler } from "@/registry/magicui/animated-theme-toggler";
+import { useTheme } from "@mui/material/styles";
 import { Flame, CheckCircle2, Plus, Trash2, X } from "lucide-react";
-
 import { Preferences } from "@capacitor/preferences";
 import { Capacitor } from "@capacitor/core";
+import PageShell from "@/components/PageShell";
+import useStoredState from "@/hooks/useStoredState";
 
-function Habits({ mode, toggleTheme }) {
-  const [habits, setHabits] = useState(() => {
-    try {
-      const saved = localStorage.getItem("habits");
-      return saved ? JSON.parse(saved) : [];
-    } catch (e) {
-      console.error("Error parsing habits from localStorage:", e);
-      return [];
-    }
-  });
-
+function Habits() {
+  const theme = useTheme();
+  const [habits, setHabits] = useStoredState("habits", []);
   const [newHabit, setNewHabit] = useState("");
   const [isAdding, setIsAdding] = useState(false);
 
+  // Mirror habits to Capacitor Preferences for the home-screen widget
   useEffect(() => {
-    localStorage.setItem("habits", JSON.stringify(habits));
-
-    const saveData = async () => {
-      // Only call native plugins on native platforms
-      if (!Capacitor.isNativePlatform()) return;
-
-      try {
-        const data = JSON.stringify(habits);
-        // Save to Preferences for Widget
-        await Preferences.set({
-          key: "widget_habits",
-          value: data,
-        });
-      } catch (e) {
-        console.error("Widget Save Error", e);
-      }
-    };
-    saveData();
+    if (!Capacitor.isNativePlatform()) return;
+    Preferences.set({
+      key: "widget_habits",
+      value: JSON.stringify(habits),
+    }).catch((e) => console.error("Widget Save Error", e));
   }, [habits]);
-
-  const theme = useMemo(
-    () =>
-      createTheme({
-        palette: {
-          mode,
-          ...(mode === "dark"
-            ? {
-                background: { default: "#050505", paper: "#1e1e1e" },
-                text: { primary: "#ffffff", secondary: "#a0a0a0" },
-              }
-            : {
-                background: { default: "#f8fafc", paper: "#ffffff" },
-                text: { primary: "#0f172a", secondary: "#475569" },
-              }),
-        },
-        typography: { fontFamily: '"Montserrat", system-ui, sans-serif' },
-      }),
-    [mode],
-  );
 
   const handleAddHabit = () => {
     if (!newHabit.trim()) return;
@@ -70,7 +29,7 @@ function Habits({ mode, toggleTheme }) {
         id: Date.now(),
         name: newHabit,
         streak: 0,
-        completedDates: [], // Store ISO date strings YYYY-MM-DD
+        completedDates: [],
       },
     ]);
     setNewHabit("");
@@ -88,16 +47,13 @@ function Habits({ mode, toggleTheme }) {
 
     const today = getToday();
     const d = new Date();
-    d.setDate(d.getDate() - d.getDay()); // Sunday as start of week
+    d.setDate(d.getDate() - d.getDay());
     const startOfWeek = d.toISOString().split("T")[0];
 
     habits.forEach((h) => {
-      // Find current streak by using the habit's string
-      // Note: we can interpret 'current streak' as the sum of all individual current streaks
       currentStreakTotal += h.streak || 0;
       if ((h.streak || 0) > maxStreak) maxStreak = h.streak;
 
-      // Finished habits
       totalHabitsFinished += (h.completedDates || []).length;
 
       const finishedThisWeek = (h.completedDates || []).filter(
@@ -105,9 +61,7 @@ function Habits({ mode, toggleTheme }) {
       ).length;
       habitsFinishedThisWeek += finishedThisWeek;
 
-      if ((h.completedDates || []).includes(today)) {
-        completedToday++;
-      }
+      if ((h.completedDates || []).includes(today)) completedToday++;
     });
 
     const completionRate =
@@ -137,11 +91,9 @@ function Habits({ mode, toggleTheme }) {
         let newStreak = h.streak;
 
         if (isCompletedToday) {
-          // Undo completion
           newCompletedDates = h.completedDates.filter((d) => d !== today);
-          newStreak = Math.max(0, newStreak - 1); // Simple decrement logic, for true streak we'd need to recalculate
+          newStreak = Math.max(0, newStreak - 1);
         } else {
-          // Complete
           newCompletedDates = [...h.completedDates, today];
           newStreak = newStreak + 1;
         }
@@ -160,383 +112,358 @@ function Habits({ mode, toggleTheme }) {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
+    <PageShell>
       <style>
         {`
-          .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-          }
-          .hide-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-          }
+          .hide-scrollbar::-webkit-scrollbar { display: none; }
+          .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         `}
       </style>
-      <div className={`page-content ${mode === "light" ? "light-mode" : ""}`}>
+
+      <div className="section-title">Atomic Habits</div>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 1fr)",
+          gap: "0.5rem",
+          paddingBottom: "1rem",
+          marginBottom: "1rem",
+          width: "100%",
+          maxWidth: "600px",
+        }}
+      >
         <div
+          className="card"
           style={{
-            position: "absolute",
-            top: "calc(1rem + env(safe-area-inset-top))",
-            right: "1rem",
-            zIndex: 50,
-          }}
-        >
-          <AnimatedThemeToggler
-            isDark={mode === "dark"}
-            toggleTheme={toggleTheme}
-          />
-        </div>
-
-        <div className="section-title">Atomic Habits</div>
-
-        {/* Stats Section */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "0.5rem",
-            paddingBottom: "1rem",
-            marginBottom: "1rem",
-            width: "100%",
-            maxWidth: "600px",
-          }}
-        >
-          {/* Current Streak */}
-          <div
-            className="card"
-            style={{
-              padding: "1rem 0.5rem",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              alignItems: "center",
-              textAlign: "center",
-            }}
-          >
-            <div
-              style={{
-                fontSize: "clamp(0.6rem, 2.5vw, 0.75rem)",
-                fontWeight: 700,
-                letterSpacing: "0.5px",
-                textTransform: "uppercase",
-                marginBottom: "1rem",
-                lineHeight: 1.4,
-                color: theme.palette.text.secondary,
-              }}
-            >
-              Current
-              <br />
-              Streak
-            </div>
-            <div
-              style={{
-                fontSize: "clamp(1.5rem, 6vw, 2.5rem)",
-                fontWeight: 800,
-                lineHeight: 1,
-                marginBottom: "0.5rem",
-                color: theme.palette.text.primary,
-              }}
-            >
-              {stats.currentStreakTotal}
-            </div>
-            <div
-              style={{
-                fontSize: "clamp(0.6rem, 2vw, 0.75rem)",
-                color: theme.palette.text.secondary,
-                opacity: 0.8,
-              }}
-            >
-              Best Streak: {stats.maxStreak}
-            </div>
-          </div>
-
-          {/* Habit Finished */}
-          <div
-            className="card"
-            style={{
-              padding: "1rem 0.5rem",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              alignItems: "center",
-              textAlign: "center",
-            }}
-          >
-            <div
-              style={{
-                fontSize: "clamp(0.6rem, 2.5vw, 0.75rem)",
-                fontWeight: 700,
-                letterSpacing: "0.5px",
-                textTransform: "uppercase",
-                marginBottom: "1rem",
-                lineHeight: 1.4,
-                color: theme.palette.text.secondary,
-              }}
-            >
-              Habit
-              <br />
-              Finished
-            </div>
-            <div
-              style={{
-                fontSize: "clamp(1.5rem, 6vw, 2.5rem)",
-                fontWeight: 800,
-                lineHeight: 1,
-                marginBottom: "0.5rem",
-                color: theme.palette.text.primary,
-              }}
-            >
-              {stats.totalHabitsFinished}
-            </div>
-            <div
-              style={{
-                fontSize: "clamp(0.6rem, 2vw, 0.75rem)",
-                color: theme.palette.text.secondary,
-                opacity: 0.8,
-              }}
-            >
-              This week: {stats.habitsFinishedThisWeek}
-            </div>
-          </div>
-
-          {/* Completion Rate */}
-          <div
-            className="card"
-            style={{
-              padding: "1rem 0.5rem",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              alignItems: "center",
-              textAlign: "center",
-            }}
-          >
-            <div
-              style={{
-                fontSize: "clamp(0.6rem, 2.5vw, 0.75rem)",
-                fontWeight: 700,
-                letterSpacing: "0.5px",
-                textTransform: "uppercase",
-                marginBottom: "1rem",
-                lineHeight: 1.4,
-                color: theme.palette.text.secondary,
-              }}
-            >
-              Completion
-              <br />
-              Rate
-            </div>
-            <div
-              style={{
-                fontSize: "clamp(1.5rem, 6vw, 2.5rem)",
-                fontWeight: 800,
-                lineHeight: 1,
-                marginBottom: "0.5rem",
-                color: theme.palette.text.primary,
-              }}
-            >
-              {stats.completionRate}%
-            </div>
-            <div
-              style={{
-                fontSize: "clamp(0.6rem, 2vw, 0.75rem)",
-                color: theme.palette.text.secondary,
-                opacity: 0.8,
-              }}
-            >
-              {stats.completedToday}/{stats.totalHabits} habits
-            </div>
-          </div>
-        </div>
-
-        <div
-          style={{
-            height: isAdding ? "auto" : "0",
-            overflow: "hidden",
-            transition: "all 0.3s ease",
-            opacity: isAdding ? 1 : 0,
-            marginBottom: isAdding ? "2rem" : "0",
-            width: "100%",
-            maxWidth: "600px",
-          }}
-        >
-          <div
-            className="card"
-            style={{
-              display: "flex",
-              gap: "0.5rem",
-              padding: "1rem",
-              alignItems: "center",
-            }}
-          >
-            <input
-              type="text"
-              value={newHabit}
-              onChange={(e) => setNewHabit(e.target.value)}
-              placeholder="New habit name (e.g. Read 10 pages)"
-              style={{
-                flex: 1,
-                background: "transparent",
-                border: "none",
-                color: theme.palette.text.primary,
-                fontSize: "1rem",
-                outline: "none",
-              }}
-              onKeyDown={(e) => e.key === "Enter" && handleAddHabit()}
-            />
-            <button
-              onClick={handleAddHabit}
-              disabled={!newHabit.trim()}
-              style={{
-                background: "#22c55e",
-                color: "#000",
-                border: "none",
-                borderRadius: "50%",
-                width: "32px",
-                height: "32px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-                opacity: !newHabit.trim() ? 0.5 : 1,
-              }}
-            >
-              <Plus size={20} />
-            </button>
-          </div>
-        </div>
-
-        <div
-          style={{
+            padding: "1rem 0.5rem",
             display: "flex",
             flexDirection: "column",
-            gap: "1rem",
-            width: "100%",
-            maxWidth: "600px",
+            justifyContent: "space-between",
+            alignItems: "center",
+            textAlign: "center",
           }}
         >
-          {habits.length === 0 && !isAdding && (
+          <div
+            style={{
+              fontSize: "clamp(0.6rem, 2.5vw, 0.75rem)",
+              fontWeight: 700,
+              letterSpacing: "0.5px",
+              textTransform: "uppercase",
+              marginBottom: "1rem",
+              lineHeight: 1.4,
+              color: theme.palette.text.secondary,
+            }}
+          >
+            Current
+            <br />
+            Streak
+          </div>
+          <div
+            style={{
+              fontSize: "clamp(1.5rem, 6vw, 2.5rem)",
+              fontWeight: 800,
+              lineHeight: 1,
+              marginBottom: "0.5rem",
+              color: theme.palette.text.primary,
+            }}
+          >
+            {stats.currentStreakTotal}
+          </div>
+          <div
+            style={{
+              fontSize: "clamp(0.6rem, 2vw, 0.75rem)",
+              color: theme.palette.text.secondary,
+              opacity: 0.8,
+            }}
+          >
+            Best Streak: {stats.maxStreak}
+          </div>
+        </div>
+
+        <div
+          className="card"
+          style={{
+            padding: "1rem 0.5rem",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            alignItems: "center",
+            textAlign: "center",
+          }}
+        >
+          <div
+            style={{
+              fontSize: "clamp(0.6rem, 2.5vw, 0.75rem)",
+              fontWeight: 700,
+              letterSpacing: "0.5px",
+              textTransform: "uppercase",
+              marginBottom: "1rem",
+              lineHeight: 1.4,
+              color: theme.palette.text.secondary,
+            }}
+          >
+            Habit
+            <br />
+            Finished
+          </div>
+          <div
+            style={{
+              fontSize: "clamp(1.5rem, 6vw, 2.5rem)",
+              fontWeight: 800,
+              lineHeight: 1,
+              marginBottom: "0.5rem",
+              color: theme.palette.text.primary,
+            }}
+          >
+            {stats.totalHabitsFinished}
+          </div>
+          <div
+            style={{
+              fontSize: "clamp(0.6rem, 2vw, 0.75rem)",
+              color: theme.palette.text.secondary,
+              opacity: 0.8,
+            }}
+          >
+            This week: {stats.habitsFinishedThisWeek}
+          </div>
+        </div>
+
+        <div
+          className="card"
+          style={{
+            padding: "1rem 0.5rem",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            alignItems: "center",
+            textAlign: "center",
+          }}
+        >
+          <div
+            style={{
+              fontSize: "clamp(0.6rem, 2.5vw, 0.75rem)",
+              fontWeight: 700,
+              letterSpacing: "0.5px",
+              textTransform: "uppercase",
+              marginBottom: "1rem",
+              lineHeight: 1.4,
+              color: theme.palette.text.secondary,
+            }}
+          >
+            Completion
+            <br />
+            Rate
+          </div>
+          <div
+            style={{
+              fontSize: "clamp(1.5rem, 6vw, 2.5rem)",
+              fontWeight: 800,
+              lineHeight: 1,
+              marginBottom: "0.5rem",
+              color: theme.palette.text.primary,
+            }}
+          >
+            {stats.completionRate}%
+          </div>
+          <div
+            style={{
+              fontSize: "clamp(0.6rem, 2vw, 0.75rem)",
+              color: theme.palette.text.secondary,
+              opacity: 0.8,
+            }}
+          >
+            {stats.completedToday}/{stats.totalHabits} habits
+          </div>
+        </div>
+      </div>
+
+      <div
+        style={{
+          height: isAdding ? "auto" : "0",
+          overflow: "hidden",
+          transition: "all 0.3s ease",
+          opacity: isAdding ? 1 : 0,
+          marginBottom: isAdding ? "2rem" : "0",
+          width: "100%",
+          maxWidth: "600px",
+        }}
+      >
+        <div
+          className="card"
+          style={{
+            display: "flex",
+            gap: "0.5rem",
+            padding: "1rem",
+            alignItems: "center",
+          }}
+        >
+          <input
+            type="text"
+            value={newHabit}
+            onChange={(e) => setNewHabit(e.target.value)}
+            placeholder="New habit name (e.g. Read 10 pages)"
+            style={{
+              flex: 1,
+              background: "transparent",
+              border: "none",
+              color: theme.palette.text.primary,
+              fontSize: "1rem",
+              outline: "none",
+            }}
+            onKeyDown={(e) => e.key === "Enter" && handleAddHabit()}
+          />
+          <button
+            onClick={handleAddHabit}
+            disabled={!newHabit.trim()}
+            style={{
+              background: "#22c55e",
+              color: "#000",
+              border: "none",
+              borderRadius: "50%",
+              width: "32px",
+              height: "32px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              opacity: !newHabit.trim() ? 0.5 : 1,
+            }}
+          >
+            <Plus size={20} />
+          </button>
+        </div>
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "1rem",
+          width: "100%",
+          maxWidth: "600px",
+        }}
+      >
+        {habits.length === 0 && !isAdding && (
+          <div
+            style={{ textAlign: "center", marginTop: "4rem", opacity: 0.5 }}
+          >
+            <CheckCircle2 size={48} style={{ marginBottom: "1rem" }} />
+            <p>
+              No active habits.
+              <br />
+              Build consistency one day at a time.
+            </p>
+          </div>
+        )}
+
+        {habits.map((habit) => {
+          const today = getToday();
+          const isDone = habit.completedDates.includes(today);
+
+          return (
             <div
-              style={{ textAlign: "center", marginTop: "4rem", opacity: 0.5 }}
+              key={habit.id}
+              className="card"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                padding: "1.2rem",
+                gap: "1rem",
+                opacity: isDone ? 0.8 : 1,
+              }}
             >
-              <CheckCircle2 size={48} style={{ marginBottom: "1rem" }} />
-              <p>
-                No active habits.
-                <br />
-                Build consistency one day at a time.
-              </p>
-            </div>
-          )}
+              <button
+                onClick={() => toggleHabit(habit.id)}
+                style={{
+                  background: isDone ? "#22c55e" : "transparent",
+                  border: isDone
+                    ? "none"
+                    : `2px solid ${theme.palette.text.secondary}`,
+                  borderRadius: "50%",
+                  width: "28px",
+                  height: "28px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  transition: "all 0.2s",
+                }}
+              >
+                {isDone && <CheckCircle2 size={18} color="#000" />}
+              </button>
 
-          {habits.map((habit) => {
-            const today = getToday();
-            const isDone = habit.completedDates.includes(today);
+              <div style={{ flex: 1 }}>
+                <div
+                  style={{
+                    fontSize: "1.1rem",
+                    textDecoration: isDone ? "line-through" : "none",
+                    color: isDone
+                      ? theme.palette.text.secondary
+                      : theme.palette.text.primary,
+                  }}
+                >
+                  {habit.name}
+                </div>
+              </div>
 
-            return (
               <div
-                key={habit.id}
-                className="card"
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  padding: "1.2rem",
-                  gap: "1rem",
-                  opacity: isDone ? 0.8 : 1,
+                  gap: "0.25rem",
+                  color: "#fb923c",
                 }}
               >
-                <button
-                  onClick={() => toggleHabit(habit.id)}
-                  style={{
-                    background: isDone ? "#22c55e" : "transparent",
-                    border: isDone
-                      ? "none"
-                      : `2px solid ${theme.palette.text.secondary}`,
-                    borderRadius: "50%",
-                    width: "28px",
-                    height: "28px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    cursor: "pointer",
-                    transition: "all 0.2s",
-                  }}
-                >
-                  {isDone && <CheckCircle2 size={18} color="#000" />}
-                </button>
-
-                <div style={{ flex: 1 }}>
-                  <div
-                    style={{
-                      fontSize: "1.1rem",
-                      textDecoration: isDone ? "line-through" : "none",
-                      color: isDone
-                        ? theme.palette.text.secondary
-                        : theme.palette.text.primary,
-                    }}
-                  >
-                    {habit.name}
-                  </div>
-                </div>
-
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.25rem",
-                    color: "#fb923c",
-                  }}
-                >
-                  <Flame
-                    size={18}
-                    fill={habit.streak > 0 ? "#fb923c" : "transparent"}
-                  />
-                  <span style={{ fontWeight: "bold" }}>{habit.streak}</span>
-                </div>
-
-                <button
-                  onClick={() => deleteHabit(habit.id)}
-                  style={{
-                    background: "transparent",
-                    border: "none",
-                    color: theme.palette.text.secondary,
-                    cursor: "pointer",
-                    opacity: 0.3,
-                    marginLeft: "0.5rem",
-                  }}
-                >
-                  <X size={16} />
-                </button>
+                <Flame
+                  size={18}
+                  fill={habit.streak > 0 ? "#fb923c" : "transparent"}
+                />
+                <span style={{ fontWeight: "bold" }}>{habit.streak}</span>
               </div>
-            );
-          })}
-        </div>
-        {/* Floating Action Button */}
-        <button
-          onClick={() => setIsAdding(!isAdding)}
-          style={{
-            position: "fixed",
-            bottom: "100px",
-            right: "1.5rem",
-            background: isAdding ? "#ef4444" : "#22c55e",
-            border: "none",
-            borderRadius: "50%",
-            width: "56px",
-            height: "56px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: isAdding ? "#fff" : "#000",
-            cursor: "pointer",
-            transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-            zIndex: 100,
-            boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-          }}
-        >
-          {isAdding ? <Trash2 size={24} /> : <Plus size={28} />}
-        </button>
+
+              <button
+                onClick={() => deleteHabit(habit.id)}
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  color: theme.palette.text.secondary,
+                  cursor: "pointer",
+                  opacity: 0.3,
+                  marginLeft: "0.5rem",
+                }}
+              >
+                <X size={16} />
+              </button>
+            </div>
+          );
+        })}
       </div>
-    </ThemeProvider>
+
+      <button
+        onClick={() => setIsAdding(!isAdding)}
+        style={{
+          position: "fixed",
+          bottom: "100px",
+          right: "1.5rem",
+          background: isAdding ? "#ef4444" : "#22c55e",
+          border: "none",
+          borderRadius: "50%",
+          width: "56px",
+          height: "56px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: isAdding ? "#fff" : "#000",
+          cursor: "pointer",
+          transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+          zIndex: 100,
+          boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+        }}
+      >
+        {isAdding ? <Trash2 size={24} /> : <Plus size={28} />}
+      </button>
+    </PageShell>
   );
 }
 

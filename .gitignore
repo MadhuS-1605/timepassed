@@ -1,4 +1,6 @@
+# =========================================================================
 # Logs
+# =========================================================================
 logs
 *.log
 npm-debug.log*
@@ -7,12 +9,18 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# =========================================================================
+# Dependencies & web build output
+# =========================================================================
 node_modules
 dist
 dist-ssr
 *.local
+.vite/
 
-# Editor directories and files
+# =========================================================================
+# Editor / OS
+# =========================================================================
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -23,15 +31,42 @@ dist-ssr
 *.sln
 *.sw?
 
-# Capacitor / Mobile
-# Ignore build output but keep native project config
-android/app/build/
-android/.gradle/
+# =========================================================================
+# Capacitor — keep source, ignore generated + build artifacts
+# =========================================================================
+capacitor.config.json.timestamp
+
+# Android — keep source, ignore generated assets + build outputs
 android/app/src/main/assets/public/
+android/app/src/main/assets/capacitor.config.json
+android/app/src/main/assets/capacitor.plugins.json
+android/app/build/
+android/build/
+android/.gradle/
+android/local.properties
+android/captures/
+android/app/release/
+
+# iOS — keep source, ignore generated assets + Pods + user data
 ios/App/App/public/
+ios/App/App/capacitor.config.json
+ios/App/App/config.xml
 ios/App/Podfile.lock
 ios/App/Pods/
 ios/DerivedData/
+ios/App/build/
+ios/App/App.xcodeproj/xcuserdata/
+ios/App/App.xcworkspace/xcuserdata/
 
-# Capacitor config (local only)
-capacitor.config.json.timestamp
+# =========================================================================
+# Signing material — NEVER commit
+# =========================================================================
+android/keystore.properties
+*.jks
+*.keystore
+*.p12
+*.mobileprovision
+*.cer
+**/GoogleService-Info.plist
+**/google-services.json
+.claude

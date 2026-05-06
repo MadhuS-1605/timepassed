@@ -1,207 +1,259 @@
 # TimePassed ⏳
 
-**TimePassed** is a beautiful, modern personal dashboard designed to help you visualize, track, and master your time. It combines precise time-tracking tools with mindful life progress visualizations in a sleek, glassmorphic interface.
+**TimePassed** is a calm, on-device dashboard for visualizing, tracking, and mastering your time. Year progress, life-in-weeks, mood pulses, focus timers, habits, time capsules, live wallpapers, widgets — all stitched together in a glassmorphic UI that feels at home on web, Android, and iOS.
 
-![Version](https://img.shields.io/badge/version-1.1.1-green.svg)
-![React](https://img.shields.io/badge/React-19.2.3-blue.svg)
-![Vite](https://img.shields.io/badge/Vite-7.3.0-purple.svg)
+![Version](https://img.shields.io/badge/version-1.2.0-green.svg)
+![React](https://img.shields.io/badge/React-19-blue.svg)
+![Vite](https://img.shields.io/badge/Vite-7-purple.svg)
+![Capacitor](https://img.shields.io/badge/Capacitor-8-cyan.svg)
 ![PWA](https://img.shields.io/badge/PWA-Ready-orange.svg)
 
 🌐 **Live Site**: [https://timepassed.wtf](https://timepassed.wtf)
 
 ---
 
-## ✨ Features
+## ✨ Modules
 
-TimePassed includes **10 powerful modules** to manage every aspect of your time:
+### 📊 Year Progress (Home)
+- Live percentage to 7 decimals, refreshing every second
+- **Two views** — Percent (with progress bar) or Days (365-dot grid, today highlighted)
+- Tab switcher with sliding glass pill, matching the bottom dock
+- Customizable dot density (S/M/L) and color (Accent / Today's mood)
+- Year-start, current, year-end date row
+- One-tap **Share card** export of the current state
 
-### 1. 📊 Year Progress
+### 💓 Daily Pulse
+- 5-second daily ritual: **mood** (5 emojis) + **energy** (1–5) + optional 140-char note
+- **GitHub-style yearly mood heatmap** — every cell is a day, color = mood
+- Streak chip with flame, consecutive-day counter
+- Auto-snapshots that day's habits done, focus minutes, free hours
+- Recent feed (last 7 entries) + tap any heatmap cell to view past entries
+- Optional **opt-in daily reminder** — native scheduling on Android, Notification API + setTimeout on web
 
-- Real-time visualization of the current year's progress.
-- Live precision countdown (Months, Days, Hours, Minutes, Seconds).
-- Updates every 50ms for a smooth, fluid experience.
+### 🧬 Life Progress
+- Memento Mori visualization of your life
+- Switchable units: **Years** (80) / **Months** (960) / **Weeks** (4,160)
+- Big percentage, units lived
 
-### 2. 🌍 World Clock
+### 🌍 World Clock
+- Unlimited timezones, sorted alphabetically
+- Drag-and-drop reorder; responsive grid → list
 
-- **Global Tracking**: Monitor time across unlimited timezones.
-- **Smart Sorting**: Automatically sorted alphabetically by city name.
-- **Drag & Drop**: Reorder clocks with a tactile drag interface.
-- **Responsive**: Detailed grid view on desktop, compact list on mobile.
+### 🧘 Focus Mode
+- Pomodoro + custom durations + breaks
+- Wake-lock during sessions
+- **Auto-tracks daily focus minutes** for Pulse + Wrap
 
-### 3. 🧘 Focus Mode
+### 🗓️ My Events
+- Countdown to future events, "time since" for past
+- Used as the source list for the Goal wallpaper/widget
 
-- **Flow State**: A dedicated, distraction-free timer for deep work.
-- **Flexible Intervals**: Set custom durations for focus sessions and breaks.
-- **Minimalist UI**: Removes all clutter to keep you in the zone.
+### 🔥 Atomic Habits
+- Daily checkbox + streak flames
+- Stats: current streak, total finished, completion rate
+- Mirrored to widget data
 
-### 4. 🧬 Life Progress
+### 🔒 Time Vault
+- Digital time capsules locked until a chosen date
+- On-device only (your browser's local storage)
 
-- **Memento Mori**: A powerful visualization of your life expectancy.
-- **Perspective**: See your life in weeks/months to gain long-term perspective.
-- **Stats**: Track percentage of life lived vs. remaining.
+### 🚀 Time Travel (Milestones)
+- Cosmic life-stat milestones (1B seconds alive, etc.)
+- Predicted dates for the next major milestone
 
-### 5. 🗓️ My Events
+### 📊 Time Audit
+- 24-hour breakdown sliders (Work / Sleep / Commute / Chores)
+- Reveals your true free time
+- **Persisted** to feed Pulse's "free hours" auto-stat
 
-- **Event Countdowns**: Track time remaining to future events (Trips, Deadlines).
-- **Time Since**: Track how long it has been since past memories.
-- **Smart Sorting**: Automatically orders events by chronological order.
+### 📅 Date Compare
+- Diff between any two dates with future/past awareness
 
-### 6. 🔥 Atomic Habits
+### 🎨 Wallpaper (new)
+- Beautiful **1080×2400 wallpapers** rendered live on canvas, exportable as PNG
+- **5 templates**:
+  - **Year** — 365 dot grid + percentage
+  - **Life** — your life as Years / Months / Weeks
+  - **Day** — 24-hour grid with current-hour halo
+  - **Goal** — countdown grid to a chosen event
+  - **Pulse** — today's mood card
+- 5 accent colors, dark/light backgrounds
+- **Set as Live Wallpaper** (Android) — auto-fills as time passes, redraws every minute
+- iOS path: Share → Save Image → Settings → Wallpaper
 
-- **Daily Tracker**: A clean interface to mark daily habits as complete.
-- **Streak System**: Visual feedback with flame icons to motivate consistency.
-- **Local Persistence**: Your streaks are saved securely on your device.
-
-### 7. 🔒 Time Vault
-
-- **Digital Time Capsules**: Write notes to your future self.
-- **Lock Mechanism**: Messages remain blurred and inaccessible until the unlock date.
-- **Secure**: A private space for your future thoughts and predictions.
-
-### 8. 🚀 Time Travel (Milestones)
-
-- **Cosmic Milestones**: Track unique life stats (e.g., "1 Billion Seconds Alive").
-- **Predictions**: See exactly when you will hit your next major life milestone.
-- **Fun Stats**: precise calculations of your age in various units.
-
-### 9. 📊 Time Audit
-
-- **24h Breakdown**: Analyze how you spend your 24 hours.
-- **Free Time Calculator**: Input your Work, Sleep, Commute, and Chores to reveal your true "Free Time".
-- **Visual Charts**: Color-coded bar charts to visualize your day.
-
-### 10. 📅 Date Compare
-
-- **Diff Tool**: Calculate the exact difference between any two dates.
-- **Dynamic Context**: Automatically detects if the target date is in the past or future.
+### 🌟 Yearly Wrap (new)
+- Spotify-Wrapped-style year recap: pulse entries, max streak, focus hours, habits done, avg mood, top mood, mood breakdown bars
+- Year navigator (previous years too)
+- Shareable 1080×1920 portrait card
 
 ---
 
-## �️ Tech Stack
+## 🎛️ Customization
 
-Built with the latest web technologies for speed and performance:
+- **Dark / Light** themes with smooth animated toggle
+- **AMOLED true-black** mode for OLED phones
+- **Material You** dynamic system color (Android 12+) — accent follows your wallpaper
+- All accents use a CSS `--accent` variable so user color choices propagate everywhere
 
-- **Core**: [React 19](https://react.dev/), [Vite 7](https://vitejs.dev/), [React Router 7](https://reactrouter.com/)
-- **UI System**: [Material-UI 7](https://mui.com/) (Joy/System), [Lucide React](https://lucide.dev/)
-- **Animation**: [Framer Motion 12](https://www.framer.com/motion/)
-- **Data Handling**: [Day.js](https://day.js.org/) for date manipulation
-- **PWA**: `vite-plugin-pwa` for offline capability and installation
+---
+
+## 📲 Wallpapers & Widgets
+
+### Android — Home-screen widgets
+Five widgets ship with the Capacitor Android app:
+
+1. **Year Progress** — large percentage with progress bar
+2. **Daily Pulse** — mood emoji + streak + year %
+3. **Atomic Habits** — list with completion state
+4. **Events** — upcoming countdowns list
+5. **Compare / Goal** — countdown to a pinned date
+
+### Android — Live wallpaper
+`YearWallpaperService` renders Year / Life / Day / Goal templates natively on a `Canvas`. Reads accent + theme + life unit + goal from Capacitor Preferences. Refreshes every minute so dots fill in cleanly as days roll over.
+
+### iOS — Widget Extension
+A complete WidgetKit / SwiftUI Widget Extension scaffold is included at `ios/App/TimePassedWidgets/`:
+
+- `YearWidget`, `DayWidget`, `LifeWidget`, `PulseWidget`, `GoalWidget`
+- Reads from a shared App Group (`group.com.timepassed.app`) populated by the main app
+- One-time Xcode setup required — see [`ios/IOS_WIDGETS_SETUP.md`](ios/IOS_WIDGETS_SETUP.md) for the ~15-minute walkthrough
+
+### iOS — Wallpapers
+iOS doesn't allow third-party live wallpapers. Use the Share button → Save Image → Settings → Wallpaper. Pair with an iOS Shortcut for a weekly "refresh wallpaper" automation.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Web**: React 19, Vite 7, React Router 7, Material-UI 7, Framer Motion 12, Day.js
+- **Native**: Capacitor 8 (Android + iOS), `@capacitor/preferences`, `@capacitor/local-notifications`
+- **Android**: Java widgets (`AppWidgetProvider`), `WallpaperService` for live wallpaper, custom Capacitor plugins (`LockScreenPlugin`, `MaterialYouPlugin`, `LiveWallpaperPlugin`)
+- **iOS**: SwiftUI + WidgetKit Widget Extension, custom Capacitor plugin (`SharedDefaultsPlugin`) for App Group sharing
+- **PWA**: `vite-plugin-pwa`, full offline capability
 - **Styling**: CSS Modules, Emotion, Glassmorphism design system
 
 ---
 
-## � Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- pnpm (recommended) or npm
-
-### Installation
-
-1.  **Clone the repository**
-
-    ```bash
-    git clone https://github.com/yourusername/timepassed.git
-    cd timepassed
-    ```
-
-2.  **Install dependencies**
-
-    ```bash
-    pnpm install
-    # or
-    npm install
-    ```
-
-3.  **Start the development server**
-    ```bash
-    pnpm dev
-    ```
-    Open `http://localhost:5173` to view it in your browser.
-
-### Building for Production
+## 🚀 Getting Started
 
 ```bash
-pnpm build
+git clone https://github.com/yourusername/timepassed.git
+cd timepassed
+pnpm install
+pnpm dev                         # web at http://localhost:5173
 ```
 
-This generates a highly optimized build in the `dist` folder.
+### Build
+
+```bash
+pnpm build                       # static dist/
+pnpm cap sync android            # sync to Android project
+pnpm cap run android             # build + install on connected device/emulator
+pnpm cap sync ios && pnpm cap open ios   # then Run from Xcode
+```
+
+iOS widgets need a one-time Xcode target add — see `ios/IOS_WIDGETS_SETUP.md`.
 
 ---
 
-## 📱 Progressive Web App (PWA)
+## 📱 Install as PWA
 
-TimePassed is a fully optimized PWA. You can install it on your device for a native app-like experience (offline access, full screen, no browser bars).
-
-### Installation Guide
-
-- **iOS (Safari)**: Tap **Share** → scroll down → **"Add to Home Screen"**.
-- **Android (Chrome)**: Tap **Menu (⋮)** → **"Install App"**.
-- **Desktop (Chrome/Edge)**: Click the **Install Icon (⊕)** in the address bar.
+- **iOS Safari**: Share → Add to Home Screen
+- **Android Chrome**: ⋮ menu → Install App
+- **Desktop Chrome/Edge**: ⊕ icon in the address bar
 
 ---
 
-## 🤖 iOS Shortcuts & Automation
+## 🔒 Privacy
 
-Take TimePassed to the next level by integrating it with iOS Shortcuts.
+Everything is stored on your device — `localStorage` on web, Capacitor Preferences on native, App Group UserDefaults on iOS for widgets. No accounts, no servers, no telemetry beyond Vercel Analytics on the public site.
 
-### 1. Quick Launch Shortcut
-
-1.  Open **Shortcuts** app on iOS.
-2.  Add Action: **"Open App"** → Select **"TimePassed"**.
-3.  Add to Home Screen for a custom icon.
-
-### 2. "Check Time" Voice Command
-
-1.  Create a shortcut named **"Check Time Progress"**.
-2.  Add Action: **"Open App"** → **"TimePassed"**.
-3.  Say _"Hey Siri, Check Time Progress"_ to instantly launch the dashboard.
-
-### 3. Morning Routine Automation
-
-1.  Go to **Automation** tab in Shortcuts.
-2.  Create Personal Automation: **"Time of Day"** (e.g., 8:00 AM).
-3.  Action: **"Open App"** → **"TimePassed"**.
-4.  Result: The app opens automatically every morning to show your year progress.
+The Time Vault stores capsules unencrypted in localStorage, so treat it as private rather than secret.
 
 ---
 
-## � Project Structure
+## 📁 Project Structure
 
 ```
 timepassed/
-├── public/              # Static assets (PWA icons, manifest)
+├── public/                          # PWA icons, manifest
 ├── src/
-│   ├── assets/         # App assets
-│   ├── components/     # Reusable UI components
-│   │   └── Navigation.jsx  # Main Dock Navigation
-│   ├── pages/          # Application Modules
-│   │   ├── Home.jsx    # Year Progress
-│   │   ├── World.jsx   # World Clock
-│   │   ├── Focus.jsx   # Focus Timer
-│   │   ├── Life.jsx    # Life Visualization
-│   │   ├── Events.jsx  # Event Tracker
-│   │   ├── Habits.jsx  # Habit Tracker
-│   │   ├── Vault.jsx   # Time Vault
-│   │   ├── Audit.jsx   # Time Audit
-│   │   ├── Milestones.jsx # Time Travel
-│   │   └── Compare.jsx # Date Comparison
-│   ├── registry/       # UI Component Registry (MagicUI)
-│   ├── App.jsx         # Main Layout & Routing
-│   ├── main.jsx        # Entry Point
-│   └── index.css       # Global Styles & Variables
-├── index.html          # HTML Entry
-├── vite.config.js      # Vite & PWA Configuration
-└── package.json        # Dependencies
+│   ├── components/
+│   │   ├── Onboarding.jsx           # First-run 5-slide tour
+│   │   ├── Navigation.jsx           # Bottom dock with sliding pill
+│   │   ├── PulsePrompt.jsx          # Mood + energy + note picker
+│   │   ├── MoodHeatmap.jsx          # 53×7 yearly heatmap
+│   │   ├── PulseReminderSettings.jsx
+│   │   ├── ShareCardButton.jsx      # Generic 1080² card share
+│   │   └── PageShell.jsx
+│   ├── pages/
+│   │   ├── Home.jsx                 # Year + Pulse hint card
+│   │   ├── Pulse.jsx                # Mood loop + heatmap
+│   │   ├── Wallpaper.jsx            # Live preview + 5 templates
+│   │   ├── Wrap.jsx                 # Yearly recap
+│   │   ├── Life.jsx Events.jsx Focus.jsx Habits.jsx
+│   │   ├── Vault.jsx Milestones.jsx Audit.jsx
+│   │   └── Compare.jsx World.jsx
+│   ├── hooks/
+│   │   ├── useStoredState.js
+│   │   ├── useDailyPulse.js
+│   │   ├── useNotificationSound.js
+│   │   ├── useNativeNotifications.js
+│   │   ├── useLiveWallpaper.js      # Android live wallpaper bridge
+│   │   ├── useMaterialYou.js        # Android 12+ system color
+│   │   └── useSharedDefaults.js     # iOS App Group bridge
+│   ├── lib/
+│   │   ├── wallpaperRenderers.js    # 1080×2400 canvas renderers
+│   │   └── shareCardRenderers.js    # 1080² + 1080×1920 share cards
+│   └── theme/
+│       └── ThemeProvider.jsx        # Dark/light/AMOLED + Material You
+├── android/
+│   └── app/src/main/
+│       ├── java/com/timepassed/app/
+│       │   ├── YearProgressWidget.java
+│       │   ├── PulseWidget.java
+│       │   ├── HabitsWidget.java
+│       │   ├── EventsWidget.java
+│       │   ├── CompareWidget.java
+│       │   ├── YearWallpaperService.java   # Live wallpaper
+│       │   ├── LiveWallpaperPlugin.java
+│       │   ├── MaterialYouPlugin.java
+│       │   └── LockScreenPlugin.java
+│       └── res/
+│           ├── layout/widget_*.xml
+│           └── xml/widget_*_info.xml
+├── ios/
+│   ├── App/App/
+│   │   ├── SharedDefaultsPlugin.swift       # App Group bridge
+│   │   └── App.entitlements
+│   ├── App/TimePassedWidgets/
+│   │   ├── TimePassedWidgetsBundle.swift
+│   │   ├── SharedData.swift
+│   │   ├── Theme.swift
+│   │   ├── YearWidget.swift
+│   │   ├── DayWidget.swift
+│   │   ├── LifeWidget.swift
+│   │   ├── PulseWidget.swift
+│   │   └── GoalWidget.swift
+│   └── IOS_WIDGETS_SETUP.md
+├── vite.config.js
+└── package.json
 ```
+
+---
+
+## 🤖 iOS Shortcuts (optional)
+
+Pair TimePassed with iOS Shortcuts for ambient nudges:
+
+- **Morning launch** — Personal Automation → Time of Day → Open App → TimePassed
+- **Wallpaper refresh nudge** — weekly trigger that opens `timepassed://wallpaper` so you remember to re-export and re-set
+- **Voice trigger** — "Hey Siri, Check Time" → Open TimePassed
 
 ---
 
 ## 📄 License
 
-This project is open-source and available under the MIT License.
-
----
+MIT — open source, hackable, yours.
 
 Made with ❤️ by [Madhu Gowda](https://github.com/MadhuS-1605)

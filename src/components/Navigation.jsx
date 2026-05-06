@@ -12,10 +12,15 @@ import {
   CheckCircle2,
   PieChart,
   Globe,
+  Activity,
+  ImageDown,
+  Sparkles,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useThemeMode } from "@/theme/ThemeProvider";
 
-function Navigation({ mode }) {
+function Navigation() {
+  const { mode } = useThemeMode();
   const location = useLocation();
   const [showMore, setShowMore] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
@@ -28,13 +33,16 @@ function Navigation({ mode }) {
   }, []);
 
   const visibleItems = [
-    { path: "/", icon: Home, label: "Home" }, // User requested "Home"
-    { path: "/events", icon: Clock, label: "Events" }, // User requested "Events" 2nd
-    { path: "/focus", icon: Crosshair, label: "Focus" }, // User requested "Focus" 3rd
-    { path: "/life", icon: Calendar, label: "Life" }, // User requested "Life" 4th
+    { path: "/", icon: Home, label: "Home" },
+    { path: "/pulse", icon: Activity, label: "Pulse" },
+    { path: "/events", icon: Clock, label: "Events" },
+    { path: "/focus", icon: Crosshair, label: "Focus" },
   ];
 
   const moreItems = [
+    { path: "/life", icon: Calendar, label: "Life" },
+    { path: "/wrap", icon: Sparkles, label: "Wrap" },
+    { path: "/wallpaper", icon: ImageDown, label: "Wallpaper" },
     { path: "/compare", icon: GitCompare, label: "Compare" },
     { path: "/milestones", icon: Map, label: "Travel" },
     { path: "/vault", icon: Lock, label: "Vault" },
@@ -176,7 +184,7 @@ function Navigation({ mode }) {
                           position: "absolute",
                           inset: 0,
                           borderRadius: "24px",
-                          backgroundColor: "#22c55e",
+                          backgroundColor: "var(--accent, #22c55e)",
                           zIndex: 0,
                         }}
                       />
@@ -272,7 +280,7 @@ function Navigation({ mode }) {
                     position: "absolute",
                     inset: 0,
                     borderRadius: "24px",
-                    backgroundColor: "#22c55e",
+                    backgroundColor: "var(--accent, #22c55e)",
                     zIndex: 0,
                   }}
                   transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
@@ -333,7 +341,7 @@ function Navigation({ mode }) {
                   position: "absolute",
                   inset: 0,
                   borderRadius: "24px",
-                  backgroundColor: isMoreActive ? "#22c55e" : "#22c55e",
+                  backgroundColor: "var(--accent, #22c55e)",
                   zIndex: 0,
                 }}
               />

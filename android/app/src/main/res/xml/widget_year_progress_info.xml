@@ -6,5 +6,5 @@
     android:previewImage="@mipmap/ic_launcher"
     android:initialLayout="@layout/widget_year_progress"
     android:resizeMode="horizontal|vertical"
-    android:widgetCategory="home_screen">
+    android:widgetCategory="home_screen|keyguard">
 </appwidget-provider>
