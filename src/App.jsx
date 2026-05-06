@@ -22,8 +22,14 @@ import {
   reloadIosWidgets,
   sharedDefaultsSupported,
 } from "./hooks/useSharedDefaults";
+import useDeepLinks from "./hooks/useDeepLinks";
 import "./index.css";
 import { Analytics } from "@vercel/analytics/react";
+
+function DeepLinks() {
+  useDeepLinks();
+  return null;
+}
 
 function IosWidgetMirror() {
   // Sync local data into the iOS App Group on every app launch + once per
@@ -78,6 +84,7 @@ function App() {
           </Routes>
           <Navigation />
           <Onboarding />
+          <DeepLinks />
           <IosWidgetMirror />
           <Analytics />
         </Router>

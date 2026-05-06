@@ -59,6 +59,14 @@ ios/App/App.xcodeproj/xcuserdata/
 ios/App/App.xcworkspace/xcuserdata/
 
 # =========================================================================
+# macOS — Swift build outputs
+# =========================================================================
+mac/**/.build/
+mac/**/build/
+mac/**/.swiftpm/
+mac/**/Package.resolved
+
+# =========================================================================
 # Signing material — NEVER commit
 # =========================================================================
 android/keystore.properties

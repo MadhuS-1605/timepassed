@@ -1,6 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTheme } from "@mui/material/styles";
-import { Download, Share2, Image as ImageIcon, Sparkles } from "lucide-react";
+import {
+  Download,
+  Share2,
+  Image as ImageIcon,
+  Sparkles,
+  Apple,
+} from "lucide-react";
 import { Capacitor } from "@capacitor/core";
 import PageShell from "@/components/PageShell";
 import { useThemeMode } from "@/theme/ThemeProvider";
@@ -209,6 +215,11 @@ function Wallpaper() {
   const goalNeedsEvent = template === "goal" && events.length === 0;
   const isIos =
     Capacitor.isNativePlatform() && Capacitor.getPlatform() === "ios";
+  const isMacWeb =
+    !Capacitor.isNativePlatform() &&
+    typeof navigator !== "undefined" &&
+    /Mac|Macintosh/.test(navigator.userAgent) &&
+    !/iPhone|iPad|iPod/.test(navigator.userAgent);
 
   return (
     <PageShell>
@@ -635,6 +646,101 @@ function Wallpaper() {
           }}
         >
           {status}
+        </div>
+      )}
+
+      {isMacWeb && (
+        <div
+          className="card"
+          style={{
+            marginTop: "1.25rem",
+            padding: "1.25rem",
+            width: "100%",
+            maxWidth: "600px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.75rem",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.6rem",
+              fontWeight: 700,
+              color: theme.palette.text.primary,
+            }}
+          >
+            <Apple size={18} /> Live wallpaper for macOS
+          </div>
+          <div
+            style={{
+              fontSize: "0.85rem",
+              color: theme.palette.text.secondary,
+              lineHeight: 1.55,
+            }}
+          >
+            Download the menu-bar helper. It re-renders the dot grid every
+            minute and applies it as your desktop wallpaper across all
+            displays.
+          </div>
+          <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+            <a
+              href="/downloads/TimePassedWallpaper.app.zip"
+              download="TimePassedWallpaper.app.zip"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.4rem",
+                background: "var(--accent, #22c55e)",
+                color: "#000",
+                border: "none",
+                borderRadius: "999px",
+                padding: "0.6rem 1rem",
+                fontSize: "0.85rem",
+                fontWeight: 700,
+                textDecoration: "none",
+              }}
+            >
+              <Download size={15} /> Wallpaper helper
+            </a>
+            <a
+              href="/downloads/TimePassedScreenSaver.saver.zip"
+              download="TimePassedScreenSaver.saver.zip"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.4rem",
+                background: "transparent",
+                color: theme.palette.text.primary,
+                border: "1px solid rgba(127,127,127,0.35)",
+                borderRadius: "999px",
+                padding: "0.6rem 1rem",
+                fontSize: "0.85rem",
+                fontWeight: 600,
+                textDecoration: "none",
+              }}
+            >
+              <Download size={15} /> Screen saver
+            </a>
+          </div>
+          <div
+            style={{
+              fontSize: "0.75rem",
+              color: theme.palette.text.secondary,
+              opacity: 0.85,
+              lineHeight: 1.6,
+            }}
+          >
+            <strong>Wallpaper helper</strong>: unzip → drag{" "}
+            <code>TimePassedWallpaper.app</code> to <strong>Applications</strong>{" "}
+            → right-click → <strong>Open</strong> → confirm. A grid icon appears in
+            your menu bar.
+            <br />
+            <strong>Screen saver</strong>: unzip → double-click the{" "}
+            <code>.saver</code> file → "Install for me" → System Settings opens
+            → pick TimePassed under <strong>Screen Saver → Other</strong>.
+          </div>
         </div>
       )}
 
