@@ -3,6 +3,7 @@ import { Capacitor } from "@capacitor/core";
 import { Preferences } from "@capacitor/preferences";
 import useStoredState from "./useStoredState";
 import { setSharedDefault, reloadIosWidgets } from "./useSharedDefaults";
+import { trackEvent } from "@/lib/analytics";
 
 const STORAGE_KEY = "pulse_entries";
 
@@ -73,17 +74,22 @@ export default function useDailyPulse() {
 
   const logToday = useCallback(
     ({ mood, energy, note = "", tags = [] }) => {
-      setEntries((prev) => ({
-        ...prev,
-        [todayKey]: {
-          mood,
-          energy,
-          note: note.slice(0, 140),
-          tags,
-          auto: snapshotAuto(),
-          timestamp: Date.now(),
-        },
-      }));
+      setEntries((prev) => {
+        // Activation event: their very first logged (non-skipped) pulse.
+        const hadLogged = Object.values(prev).some((e) => e && !e.skipped);
+        if (!hadLogged) trackEvent("first_pulse", { mood });
+        return {
+          ...prev,
+          [todayKey]: {
+            mood,
+            energy,
+            note: note.slice(0, 140),
+            tags,
+            auto: snapshotAuto(),
+            timestamp: Date.now(),
+          },
+        };
+      });
     },
     [setEntries, todayKey],
   );

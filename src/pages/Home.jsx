@@ -1,8 +1,9 @@
 import { useMemo, useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Activity, Flame, ChevronRight } from "lucide-react";
+import { Activity, Flame, ChevronRight, Camera } from "lucide-react";
 import PageShell from "@/components/PageShell";
+import InviteButton from "@/components/InviteButton";
 import PillButton from "@/components/PillButton";
 import useStoredState from "@/hooks/useStoredState";
 import useDailyPulse from "@/hooks/useDailyPulse";
@@ -241,6 +242,7 @@ function Home() {
               renderer={renderYearShareCard}
               rendererProps={{ theme: mode, now: new Date() }}
               fileBaseName="timepassed-year"
+              analyticsId="home_year"
               variant="icon"
               label="Share year"
             />
@@ -524,6 +526,36 @@ function Home() {
           )}
         </div>
       )}
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: "0.6rem",
+          flexWrap: "wrap",
+          marginTop: "1.5rem",
+        }}
+      >
+        <Link
+          to="/memories"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.45rem",
+            padding: "0.7rem 1.3rem",
+            borderRadius: 999,
+            border: "1px solid rgba(127,127,127,0.3)",
+            background: "transparent",
+            color: mode === "dark" ? "#e5e7eb" : "#0f172a",
+            textDecoration: "none",
+            fontSize: "0.9rem",
+            fontWeight: 600,
+          }}
+        >
+          <Camera size={16} /> Capture a moment
+        </Link>
+        <InviteButton campaign="home_invite" label="Share TimePassed" variant="ghost" />
+      </div>
 
       <div style={{ paddingBottom: "2rem" }}></div>
     </PageShell>

@@ -9,10 +9,83 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
     />
     <meta name="theme-color" content="#0f0f13" />
-    <title>TimePassed</title>
+
+    <!-- Primary SEO -->
+    <title>TimePassed — See Your Year, Second by Second</title>
+    <meta
+      name="description"
+      content="A calm, on-device dashboard to visualize your year and life progress, track mood and focus, build habits, and make live wallpapers. Free, private, no account."
+    />
+    <meta
+      name="keywords"
+      content="year progress, year progress bar, life progress, memento mori, time left calculator, mood tracker, focus timer, pomodoro, habit tracker, live wallpaper, life calendar, time visualizer"
+    />
+    <link rel="canonical" href="https://timepassed.wtf/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="TimePassed" />
+    <meta property="og:url" content="https://timepassed.wtf/" />
+    <meta property="og:title" content="TimePassed — See Your Year, Second by Second" />
+    <meta
+      property="og:description"
+      content="Visualize year & life progress, track mood and focus, build habits, and create live wallpapers. Free, private, on-device."
+    />
+    <meta property="og:image" content="https://timepassed.wtf/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="TimePassed — year progress dot grid" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="TimePassed — See Your Year, Second by Second" />
+    <meta
+      name="twitter:description"
+      content="Visualize year & life progress, track mood and focus, build habits, and create live wallpapers. Free, private, on-device."
+    />
+    <meta name="twitter:image" content="https://timepassed.wtf/og-image.png" />
+
+    <!-- Structured data: helps Google show a rich app result -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "TimePassed",
+        "applicationCategory": "LifestyleApplication",
+        "operatingSystem": "Web, Android, iOS, macOS",
+        "url": "https://timepassed.wtf/",
+        "description": "A calm, on-device dashboard to visualize your year and life progress, track mood and focus, build habits, and create live wallpapers.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
+    <!-- Crawler / no-JS fallback so the page has real indexable content. -->
+    <noscript>
+      <main style="max-width: 720px; margin: 0 auto; padding: 2rem; font-family: system-ui, sans-serif; color: #fff; background: #0f0f13;">
+        <h1>TimePassed — see your year, second by second</h1>
+        <p>
+          TimePassed is a calm, private, on-device dashboard for visualizing and
+          mastering your time. Everything runs in your browser or on your phone —
+          no account, no tracking, no sign-up.
+        </p>
+        <h2>What you can do</h2>
+        <ul>
+          <li><strong>Year &amp; Life Progress</strong> — watch the year tick by to the second and see your life in weeks (memento mori).</li>
+          <li><strong>Daily Pulse</strong> — a five-second mood and energy check-in with a yearly heatmap and streaks.</li>
+          <li><strong>Focus</strong> — a Pomodoro and custom timer that tracks your focused minutes.</li>
+          <li><strong>Habits</strong> — a simple daily tracker that builds streaks that stick.</li>
+          <li><strong>Live Wallpapers &amp; Widgets</strong> — turn your progress into phone wallpapers and home-screen widgets.</li>
+          <li><strong>Yearly Wrap</strong> — a shareable, year-in-review recap of your moods, focus, and habits.</li>
+        </ul>
+        <p>Open the app at <a href="https://timepassed.wtf/" style="color: #22c55e;">timepassed.wtf</a>.</p>
+      </main>
+    </noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

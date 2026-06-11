@@ -1,7 +1,6 @@
 import { useCallback } from "react";
 import { LocalNotifications } from "@capacitor/local-notifications";
 import { Capacitor } from "@capacitor/core";
-import dayjs from "dayjs";
 
 /**
  * Hook to manage native local notifications
@@ -50,7 +49,6 @@ export const useNativeNotifications = () => {
       title,
       body,
       scheduleAt,
-      channelId = "timepassed_alarms_v2",
     }) => {
       if (!Capacitor.isNativePlatform()) return;
 

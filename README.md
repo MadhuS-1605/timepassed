@@ -14,6 +14,25 @@
 
 ## ✨ Modules
 
+### 🎯 Goals
+- Set a **count** goal (e.g. "Read 24 books") or a **percent** goal
+- Log progress increments with optional notes; a progress ring fills as you go
+- **Milestone pips** at 25/50/75/100% and a completion celebration
+- Optional target-date countdown; one-tap shareable goal card
+
+### 🏆 Compete
+- Create a challenge on **focus minutes, habit check-ins, pulse streaks, or a manual count**
+- **Invite friends by link** — no account, no backend
+- Auto-metrics computed locally from your existing data
+- Leaderboard syncs via shareable **progress codes** (paste a friend's standing to update the board)
+- Shareable leaderboard card
+
+### 📸 Memory Marker
+- Snap or upload a photo and stamp it with **exactly how far through the year** you were
+- Auto-captures the year %, date, and time; add a mood + description
+- Downloadable memory card; photos stored locally (IndexedDB), metadata on-device
+- Builds a visual timeline of your year
+
 ### 📊 Year Progress (Home)
 - Live percentage to 7 decimals, refreshing every second
 - **Two views** — Percent (with progress bar) or Days (365-dot grid, today highlighted)

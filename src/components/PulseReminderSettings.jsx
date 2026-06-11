@@ -63,7 +63,6 @@ export default function PulseReminderSettings({ todayEngaged }) {
       if (next > now) {
         timeoutId = window.setTimeout(() => {
           try {
-            // eslint-disable-next-line no-new
             new Notification("Daily Pulse", {
               body: "Take a moment for today's check-in.",
             });

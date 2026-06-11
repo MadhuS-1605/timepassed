@@ -187,6 +187,7 @@ function Pulse() {
                   now: new Date(),
                 }}
                 fileBaseName="timepassed-pulse"
+                analyticsId="pulse_card"
                 label="Share pulse"
               />
               <button

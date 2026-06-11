@@ -3,6 +3,7 @@ import { useTheme } from "@mui/material/styles";
 import { Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
 import PageShell from "@/components/PageShell";
 import ShareCardButton from "@/components/ShareCardButton";
+import InviteButton from "@/components/InviteButton";
 import { renderWrapCard, STORY_CARD_HEIGHT, SHARE_CARD_SIZE } from "@/lib/shareCardRenderers";
 import { MOODS } from "@/components/PulsePrompt";
 import { useThemeMode } from "@/theme/ThemeProvider";
@@ -20,6 +21,8 @@ function aggregateForYear(year) {
   const pulseEntries = safeParse("pulse_entries", {});
   const focusDaily = safeParse("focus_daily", {});
   const habits = safeParse("habits", []);
+  const goals = safeParse("goals", []);
+  const memories = safeParse("memories", []);
 
   const yearPrefix = `${year}-`;
 
@@ -78,6 +81,14 @@ function aggregateForYear(year) {
   }, 0);
   const habitsActive = habits.length;
 
+  // Goals achieved + moments captured this year
+  const goalsCompleted = goals.filter(
+    (g) => g.completedAt && String(g.completedAt).startsWith(yearPrefix),
+  ).length;
+  const memoriesCount = memories.filter(
+    (m) => m.year === year || String(m.at || "").startsWith(yearPrefix),
+  ).length;
+
   return {
     pulseEntries: loggedEntries.length,
     maxStreak,
@@ -88,6 +99,8 @@ function aggregateForYear(year) {
     focusHours,
     habitsCompleted,
     habitsActive,
+    goalsCompleted,
+    memoriesCount,
   };
 }
 
@@ -270,6 +283,18 @@ function Wrap() {
           }
           theme={theme}
         />
+        <StatCard
+          label="Goals achieved"
+          value={stats.goalsCompleted}
+          sub={stats.goalsCompleted > 0 ? "Crushed it 🎯" : "Set a goal"}
+          theme={theme}
+        />
+        <StatCard
+          label="Moments"
+          value={stats.memoriesCount}
+          sub={stats.memoriesCount > 0 ? "Captured this year 📸" : "Capture a memory"}
+          theme={theme}
+        />
       </div>
 
       {moodBreakdown.length > 0 && (
@@ -346,31 +371,43 @@ function Wrap() {
         </div>
       )}
 
-      <ShareCardButton
-        renderer={(ctx, props) =>
-          renderWrapCard(ctx, {
-            ...props,
-            width: SHARE_CARD_SIZE,
-            height: STORY_CARD_HEIGHT,
-            year,
-            stats,
-            theme: mode,
-            now: new Date(),
-          })
-        }
-        rendererProps={{}}
-        size={SHARE_CARD_SIZE}
-        fileBaseName={`timepassed-wrap-${year}`}
-        variant="pill"
-        label="Share my Wrap"
+      <div
         style={{
-          fontSize: "1rem",
-          padding: "0.85rem 1.5rem",
-          background: "var(--accent, #22c55e)",
-          color: "#000",
-          border: "none",
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "0.75rem",
+          justifyContent: "center",
+          alignItems: "center",
         }}
-      />
+      >
+        <ShareCardButton
+          renderer={(ctx, props) =>
+            renderWrapCard(ctx, {
+              ...props,
+              width: SHARE_CARD_SIZE,
+              height: STORY_CARD_HEIGHT,
+              year,
+              stats,
+              theme: mode,
+              now: new Date(),
+            })
+          }
+          rendererProps={{}}
+          size={SHARE_CARD_SIZE}
+          fileBaseName={`timepassed-wrap-${year}`}
+          analyticsId="wrap"
+          variant="pill"
+          label="Share my Wrap"
+          style={{
+            fontSize: "1rem",
+            padding: "0.85rem 1.5rem",
+            background: "var(--accent, #22c55e)",
+            color: "#000",
+            border: "none",
+          }}
+        />
+        <InviteButton campaign="wrap_invite" label="Invite a friend" variant="ghost" />
+      </div>
 
       {stats.pulseEntries === 0 &&
         stats.focusMinutes === 0 &&
