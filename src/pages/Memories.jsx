@@ -158,7 +158,7 @@ function MemoryDetail({ mem, accentColor, theme, mode, onClose, onUpdate, onDele
       <div
         onClick={(e) => e.stopPropagation()}
         className="card"
-        style={{ width: "100%", maxWidth: 440, display: "flex", flexDirection: "column", gap: "0.9rem", padding: "1rem", marginTop: "env(safe-area-inset-top)" }}
+        style={{ width: "100%", maxWidth: 440, display: "flex", flexDirection: "column", gap: "0.9rem", padding: "1rem", marginTop: "env(safe-area-inset-top)", textAlign: "left" }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <span style={{ fontWeight: 800, color: accentColor, fontSize: "1.4rem" }}>{mem.pct.toFixed(2)}%</span>
@@ -340,7 +340,7 @@ export default function Memories() {
       <input ref={camRef} type="file" accept="image/*" capture="environment" onChange={onFile} hidden />
       <input ref={uploadRef} type="file" accept="image/*" onChange={onFile} hidden />
 
-      <div style={{ width: "100%", maxWidth: 460, display: "flex", flexDirection: "column", gap: "1rem" }}>
+      <div style={{ width: "100%", maxWidth: 460, display: "flex", flexDirection: "column", gap: "1rem", textAlign: "left" }}>
         {/* Goal-tagging banner */}
         {taggingGoal && (
           <div className="card" style={{ padding: "0.75rem 1rem", border: `1px solid ${accentColor}66`, display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.85rem" }}>
@@ -537,6 +537,7 @@ const textInput = (theme) => ({
   color: theme.palette.text.primary,
   fontSize: "0.95rem",
   boxSizing: "border-box",
+  textAlign: "left",
 });
 
 const closeBtn = {

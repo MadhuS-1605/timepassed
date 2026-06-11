@@ -78,3 +78,8 @@ android/keystore.properties
 **/GoogleService-Info.plist
 **/google-services.json
 .claude
+
+# Local env (secrets — never commit)
+.env
+.env.local
+.env.*.local
