@@ -1,3 +1,5 @@
+import { drawBrandFooter } from "./brandImage";
+
 export const SHARE_CARD_SIZE = 1080;
 export const STORY_CARD_HEIGHT = 1920;
 
@@ -74,12 +76,13 @@ const paintBackground = (ctx, w, h, palette, accent) => {
   ctx.fillRect(0, 0, w, h);
 };
 
-const drawWordmark = (ctx, w, h, palette) => {
-  drawText(ctx, "TIMEPASSED", w / 2, h - 60, {
-    size: 22,
-    weight: 700,
-    color: palette.textSecondary,
-    letterSpacing: 12,
+const drawWordmark = (ctx, w, h, palette, campaign = "app") => {
+  drawBrandFooter(ctx, {
+    centerX: w / 2,
+    bottomY: h - 40,
+    palette,
+    campaign,
+    qrSize: 104,
   });
 };
 
@@ -196,7 +199,7 @@ export function renderPulseShareCard(ctx, opts) {
     },
   );
 
-  drawWordmark(ctx, size, size, palette);
+  drawWordmark(ctx, size, size, palette, "pulse_card");
 }
 
 export function renderWrapCard(ctx, opts) {
@@ -213,20 +216,20 @@ export function renderWrapCard(ctx, opts) {
   const palette = themePalette(theme);
   paintBackground(ctx, width, height, palette, accent);
 
-  drawText(ctx, "TIMEPASSED", width / 2, 200, {
+  drawText(ctx, "TIMEPASSED", width / 2, 180, {
     size: 32,
     weight: 700,
     color: palette.textSecondary,
     letterSpacing: 14,
   });
-  drawText(ctx, "WRAP", width / 2, 290, {
-    size: 88,
+  drawText(ctx, "WRAP", width / 2, 268, {
+    size: 80,
     weight: 800,
     color: palette.textPrimary,
     letterSpacing: 18,
   });
-  drawText(ctx, String(year), width / 2, 400, {
-    size: 240,
+  drawText(ctx, String(year), width / 2, 500, {
+    size: 220,
     weight: 800,
     color: accent,
     letterSpacing: 6,
@@ -304,7 +307,7 @@ export function renderWrapCard(ctx, opts) {
       })
       .toUpperCase(),
     width / 2,
-    height - 110,
+    height - 280,
     {
       size: 26,
       weight: 600,
@@ -312,11 +315,12 @@ export function renderWrapCard(ctx, opts) {
       letterSpacing: 6,
     },
   );
-  drawText(ctx, "TIMEPASSED.WTF", width / 2, height - 60, {
-    size: 22,
-    weight: 700,
-    color: palette.textSecondary,
-    letterSpacing: 10,
+  drawBrandFooter(ctx, {
+    centerX: width / 2,
+    bottomY: height - 70,
+    palette,
+    campaign: "wrap",
+    qrSize: 168,
   });
 }
 
@@ -385,7 +389,7 @@ export function renderYearShareCard(ctx, opts) {
     ctx.fill();
   }
 
-  drawText(ctx, `${percentage.toFixed(2)}%`, size / 2, 880, {
+  drawText(ctx, `${percentage.toFixed(2)}%`, size / 2, 848, {
     size: 110,
     weight: 800,
     color: accent,
@@ -394,7 +398,7 @@ export function renderYearShareCard(ctx, opts) {
     ctx,
     `${dayOfYear} of ${totalDays} days`,
     size / 2,
-    940,
+    900,
     {
       size: 26,
       weight: 500,
@@ -403,5 +407,5 @@ export function renderYearShareCard(ctx, opts) {
     },
   );
 
-  drawWordmark(ctx, size, size, palette);
+  drawWordmark(ctx, size, size, palette, "year_card");
 }

@@ -15,6 +15,10 @@ import {
   Activity,
   ImageDown,
   Sparkles,
+  Target,
+  Camera,
+  Trophy,
+  HardDrive,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useThemeMode } from "@/theme/ThemeProvider";
@@ -40,6 +44,9 @@ function Navigation() {
   ];
 
   const moreItems = [
+    { path: "/goals", icon: Target, label: "Goals" },
+    { path: "/compete", icon: Trophy, label: "Compete" },
+    { path: "/memories", icon: Camera, label: "Memories" },
     { path: "/life", icon: Calendar, label: "Life" },
     { path: "/wrap", icon: Sparkles, label: "Wrap" },
     { path: "/wallpaper", icon: ImageDown, label: "Wallpaper" },
@@ -49,6 +56,7 @@ function Navigation() {
     { path: "/habits", icon: CheckCircle2, label: "Habits" },
     { path: "/audit", icon: PieChart, label: "Audit" },
     { path: "/world", icon: Globe, label: "World" },
+    { path: "/data", icon: HardDrive, label: "Data" },
   ];
 
   const finalNavItems = isDesktop

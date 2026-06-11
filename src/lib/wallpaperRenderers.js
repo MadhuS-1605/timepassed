@@ -1,5 +1,17 @@
+import { drawBrandFooter } from "./brandImage";
+
 export const WALLPAPER_WIDTH = 1080;
 export const WALLPAPER_HEIGHT = 2400;
+
+// Branded QR + wordmark footer shared by every wallpaper template.
+const drawFooter = (ctx, width, height, palette, campaign) =>
+  drawBrandFooter(ctx, {
+    centerX: width / 2,
+    bottomY: height - 56,
+    palette,
+    campaign,
+    qrSize: 150,
+  });
 
 export const ACCENTS = [
   { id: "green", color: "#22c55e", label: "Green" },
@@ -157,12 +169,7 @@ export function renderYearDots(ctx, opts) {
       letterSpacing: 4,
     },
   );
-  drawText(ctx, "TIMEPASSED", width / 2, height - 100, {
-    size: 26,
-    weight: 700,
-    color: palette.textSecondary,
-    letterSpacing: 14,
-  });
+  drawFooter(ctx, width, height, palette, "wallpaper_year");
 }
 
 export const LIFE_UNITS = {
@@ -292,12 +299,7 @@ export function renderLifeDots(ctx, opts) {
       letterSpacing: 4,
     },
   );
-  drawText(ctx, "TIMEPASSED", width / 2, height - 100, {
-    size: 26,
-    weight: 700,
-    color: palette.textSecondary,
-    letterSpacing: 14,
-  });
+  drawFooter(ctx, width, height, palette, "wallpaper_life");
 }
 
 export function renderPulseCard(ctx, opts) {
@@ -437,12 +439,7 @@ export function renderPulseCard(ctx, opts) {
     });
   }
 
-  drawText(ctx, "TIMEPASSED", width / 2, height - 100, {
-    size: 26,
-    weight: 700,
-    color: palette.textSecondary,
-    letterSpacing: 14,
-  });
+  drawFooter(ctx, width, height, palette, "wallpaper_pulse");
 }
 
 export function renderDayDots(ctx, opts) {
@@ -545,12 +542,7 @@ export function renderDayDots(ctx, opts) {
       letterSpacing: 4,
     },
   );
-  drawText(ctx, "TIMEPASSED", width / 2, height - 100, {
-    size: 26,
-    weight: 700,
-    color: palette.textSecondary,
-    letterSpacing: 14,
-  });
+  drawFooter(ctx, width, height, palette, "wallpaper_day");
 }
 
 export function renderGoalDots(ctx, opts) {
@@ -624,12 +616,7 @@ export function renderGoalDots(ctx, opts) {
       color: accent,
       letterSpacing: 8,
     });
-    drawText(ctx, "TIMEPASSED", width / 2, height - 100, {
-      size: 26,
-      weight: 700,
-      color: palette.textSecondary,
-      letterSpacing: 14,
-    });
+    drawFooter(ctx, width, height, palette, "wallpaper_goal");
     return;
   }
 
@@ -687,12 +674,7 @@ export function renderGoalDots(ctx, opts) {
       letterSpacing: 8,
     },
   );
-  drawText(ctx, "TIMEPASSED", width / 2, height - 100, {
-    size: 26,
-    weight: 700,
-    color: palette.textSecondary,
-    letterSpacing: 14,
-  });
+  drawFooter(ctx, width, height, palette, "wallpaper_goal");
 }
 
 export const RENDERERS = {

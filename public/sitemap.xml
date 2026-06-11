@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://timepassed.wtf/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://timepassed.wtf/life</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://timepassed.wtf/pulse</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://timepassed.wtf/focus</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://timepassed.wtf/habits</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://timepassed.wtf/wallpaper</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://timepassed.wtf/wrap</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://timepassed.wtf/events</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://timepassed.wtf/world</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://timepassed.wtf/compare</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://timepassed.wtf/milestones</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://timepassed.wtf/audit</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://timepassed.wtf/vault</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+</urlset>

@@ -63,7 +63,7 @@ function Audit() {
           {freeTime.toFixed(1)} <span style={{ fontSize: "1.5rem" }}>hrs</span>
         </div>
         <div style={{ fontSize: "0.9rem", opacity: 0.7 }}>
-          That's {((freeTime / 24) * 100).toFixed(1)}% of your day available
+          That&apos;s {((freeTime / 24) * 100).toFixed(1)}% of your day available
           for YOU.
         </div>
       </div>

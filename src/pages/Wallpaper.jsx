@@ -20,6 +20,7 @@ import {
   WALLPAPER_WIDTH,
 } from "@/lib/wallpaperRenderers";
 import { saveImage, shareImage } from "@/lib/saveImage";
+import { trackEvent } from "@/lib/analytics";
 import useStoredState from "@/hooks/useStoredState";
 
 const TEMPLATE_OPTIONS = [
@@ -151,6 +152,7 @@ function Wallpaper() {
     setStatus(null);
     try {
       const blob = await exportBlob();
+      trackEvent("wallpaper_saved", { template });
       const result = await saveImage(blob, fileName);
       setStatus(result.message);
     } catch (e) {
@@ -201,6 +203,7 @@ function Wallpaper() {
     setStatus(null);
     try {
       const blob = await exportBlob();
+      trackEvent("image_shared", { surface: "wallpaper", template });
       const result = await shareImage(blob, fileName);
       setStatus(result.message);
     } catch (e) {
@@ -738,7 +741,7 @@ function Wallpaper() {
             your menu bar.
             <br />
             <strong>Screen saver</strong>: unzip → double-click the{" "}
-            <code>.saver</code> file → "Install for me" → System Settings opens
+            <code>.saver</code> file → &quot;Install for me&quot; → System Settings opens
             → pick TimePassed under <strong>Screen Saver → Other</strong>.
           </div>
         </div>
@@ -767,7 +770,7 @@ function Wallpaper() {
             On iPhone
           </div>
           <div>
-            iOS doesn't allow third-party live wallpapers. Tap{" "}
+            iOS doesn&apos;t allow third-party live wallpapers. Tap{" "}
             <strong>Share</strong> → <strong>Save Image</strong> → open{" "}
             <strong>Settings &gt; Wallpaper</strong> → choose the saved photo.
           </div>

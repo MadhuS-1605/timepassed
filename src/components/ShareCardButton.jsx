@@ -3,6 +3,7 @@ import { Share2 } from "lucide-react";
 import { useTheme } from "@mui/material/styles";
 import { SHARE_CARD_SIZE } from "@/lib/shareCardRenderers";
 import { shareImage } from "@/lib/saveImage";
+import { trackEvent } from "@/lib/analytics";
 
 export default function ShareCardButton({
   renderer,
@@ -11,6 +12,7 @@ export default function ShareCardButton({
   size = SHARE_CARD_SIZE,
   variant = "icon", // "icon" | "pill"
   label = "Share",
+  analyticsId = "card",
   style = {},
 }) {
   const theme = useTheme();
@@ -57,6 +59,7 @@ export default function ShareCardButton({
     setBusy(true);
     try {
       const blob = await exportBlob();
+      trackEvent("image_shared", { surface: analyticsId });
       await shareImage(blob, fileName);
     } catch (e) {
       console.error("Share failed", e);

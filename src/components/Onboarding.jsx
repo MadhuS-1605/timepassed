@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { useTheme } from "@mui/material/styles";
 import useStoredState from "@/hooks/useStoredState";
+import { trackEvent } from "@/lib/analytics";
 
 const SLIDES = [
   {
@@ -63,8 +64,11 @@ export default function Onboarding() {
   const isLast = index === SLIDES.length - 1;
   const Icon = slide.icon;
 
-  const finish = () => setCompleted(true);
-  const next = () => (isLast ? finish() : setIndex(index + 1));
+  const finish = (via = "complete") => {
+    trackEvent("onboarding_done", { via, slide: index + 1 });
+    setCompleted(true);
+  };
+  const next = () => (isLast ? finish("complete") : setIndex(index + 1));
 
   return (
     <AnimatePresence>
@@ -93,7 +97,7 @@ export default function Onboarding() {
         }}
       >
         <button
-          onClick={finish}
+          onClick={() => finish("skip")}
           style={{
             position: "absolute",
             top: "calc(1rem + env(safe-area-inset-top))",

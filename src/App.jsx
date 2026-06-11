@@ -13,9 +13,12 @@ import World from "./pages/World";
 import Pulse from "./pages/Pulse";
 import Wallpaper from "./pages/Wallpaper";
 import Wrap from "./pages/Wrap";
+import Goals from "./pages/Goals";
+import Memories from "./pages/Memories";
+import Compete from "./pages/Compete";
+import Data from "./pages/Data";
 import Navigation from "./components/Navigation";
 import ErrorBoundary from "./components/ErrorBoundary";
-import Onboarding from "./components/Onboarding";
 import { AppThemeProvider } from "./theme/ThemeProvider";
 import {
   setSharedDefault,
@@ -23,11 +26,23 @@ import {
   sharedDefaultsSupported,
 } from "./hooks/useSharedDefaults";
 import useDeepLinks from "./hooks/useDeepLinks";
+import { trackEvent } from "./lib/analytics";
 import "./index.css";
 import { Analytics } from "@vercel/analytics/react";
 
 function DeepLinks() {
   useDeepLinks();
+  return null;
+}
+
+function InstallTracker() {
+  // Fires when the PWA is installed to the home screen / desktop — a key
+  // acquisition signal we otherwise can't see in pageview analytics.
+  useEffect(() => {
+    const onInstalled = () => trackEvent("app_installed", { kind: "pwa" });
+    window.addEventListener("appinstalled", onInstalled);
+    return () => window.removeEventListener("appinstalled", onInstalled);
+  }, []);
   return null;
 }
 
@@ -81,10 +96,14 @@ function App() {
             <Route path="/pulse" element={<Pulse />} />
             <Route path="/wallpaper" element={<Wallpaper />} />
             <Route path="/wrap" element={<Wrap />} />
+            <Route path="/goals" element={<Goals />} />
+            <Route path="/memories" element={<Memories />} />
+            <Route path="/compete" element={<Compete />} />
+            <Route path="/data" element={<Data />} />
           </Routes>
           <Navigation />
-          <Onboarding />
           <DeepLinks />
+          <InstallTracker />
           <IosWidgetMirror />
           <Analytics />
         </Router>
