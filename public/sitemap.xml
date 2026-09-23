@@ -7,10 +7,14 @@
   <url><loc>https://timepassed.wtf/habits</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://timepassed.wtf/wallpaper</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://timepassed.wtf/wrap</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://timepassed.wtf/goals</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://timepassed.wtf/compete</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://timepassed.wtf/memories</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://timepassed.wtf/events</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://timepassed.wtf/world</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://timepassed.wtf/compare</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://timepassed.wtf/milestones</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://timepassed.wtf/audit</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://timepassed.wtf/vault</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://timepassed.wtf/data</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
 </urlset>

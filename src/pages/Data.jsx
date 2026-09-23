@@ -17,6 +17,8 @@ import useAuth from "@/hooks/useAuth";
 import useEntitlement from "@/hooks/useEntitlement";
 import { pushSync, pullSync, lastSyncAt } from "@/lib/cloudSync";
 import { startProCheckout } from "@/lib/razorpay";
+import { startStripeCheckout } from "@/lib/stripe";
+import { startCryptoCheckout } from "@/lib/crypto";
 import {
   exportBackup,
   importBackupFile,
@@ -45,6 +47,7 @@ export default function Data() {
   const [status, setStatus] = useState(null);
   const [counts] = useState(() => storageCounts());
   const [usage, setUsage] = useState(null);
+  const [cryptoRequest, setCryptoRequest] = useState(null);
 
   // auth form
   const [email, setEmail] = useState("");
@@ -53,6 +56,24 @@ export default function Data() {
 
   useEffect(() => {
     storageEstimate().then((e) => e && setUsage(e.usage));
+  }, []);
+
+  // Returning from Stripe Checkout — the webhook (not this redirect) is what
+  // actually grants Pro, so just refresh entitlement and clean the URL.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const stripeResult = params.get("stripe");
+    if (!stripeResult) return;
+    if (stripeResult === "success") {
+      flash("Payment received — Pro unlocks within a few seconds.");
+      refresh();
+    } else if (stripeResult === "cancelled") {
+      flash("Checkout cancelled.");
+    }
+    params.delete("stripe");
+    const qs = params.toString();
+    window.history.replaceState({}, "", window.location.pathname + (qs ? `?${qs}` : ""));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const flash = (msg) => {
@@ -132,6 +153,28 @@ export default function Data() {
     }
   };
 
+  const doUpgradeStripe = async () => {
+    setBusy(true);
+    try {
+      await startStripeCheckout({ user, plan: "lifetime" }); // redirects away
+    } catch (e) {
+      flash(e.message || "Couldn't start checkout.");
+      setBusy(false);
+    }
+  };
+
+  const doUpgradeCrypto = async () => {
+    setBusy(true);
+    try {
+      const req = await startCryptoCheckout({ user, plan: "lifetime" });
+      setCryptoRequest(req);
+    } catch (e) {
+      flash(e.message || "Couldn't create payment request.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
   const doExport = async () => {
     setBusy(true);
     try {
@@ -204,10 +247,40 @@ export default function Data() {
                 : " Your free trial has ended."}
             </div>
           )}
-          {!isPro && configured && user && (
-            <button onClick={doUpgrade} disabled={busy} style={btn(accentColor, true)}>
-              <Crown size={16} /> Unlock Pro
-            </button>
+          {!isPro && configured && user && !cryptoRequest && (
+            <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", justifyContent: "center" }}>
+              <button onClick={doUpgrade} disabled={busy} style={btn(accentColor, true)}>
+                <Crown size={16} /> Pay with Razorpay
+              </button>
+              <button onClick={doUpgradeStripe} disabled={busy} style={btn(accentColor, false)}>
+                Pay with Stripe
+              </button>
+              <button onClick={doUpgradeCrypto} disabled={busy} style={btn(accentColor, false)}>
+                Pay with crypto
+              </button>
+            </div>
+          )}
+          {!isPro && configured && user && cryptoRequest && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", fontSize: "0.83rem", color: theme.palette.text.secondary }}>
+              <div>Send exactly this much USDC on Base to:</div>
+              <div style={{ fontWeight: 700, color: theme.palette.text.primary, wordBreak: "break-all" }}>{cryptoRequest.address}</div>
+              <div style={{ fontWeight: 700, color: accentColor }}>{cryptoRequest.amount} USDC</div>
+              <div>Pro unlocks automatically within a few minutes of confirmation — no need to stay on this page.</div>
+              <div style={{ display: "flex", gap: "0.5rem" }}>
+                <button
+                  onClick={() => navigator.clipboard?.writeText(cryptoRequest.address)}
+                  style={btn(accentColor, false)}
+                >
+                  Copy address
+                </button>
+                <button onClick={() => { refresh(); flash("Checked — still pending if not Pro yet."); }} style={btn(accentColor, false)}>
+                  Check status
+                </button>
+                <button onClick={() => setCryptoRequest(null)} style={{ ...btn(accentColor, false), border: "none" }}>
+                  Cancel
+                </button>
+              </div>
+            </div>
           )}
           {!isPro && configured && !user && (
             <div style={{ fontSize: "0.8rem", color: theme.palette.text.secondary }}>Sign in below to unlock Pro.</div>
