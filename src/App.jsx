@@ -18,6 +18,7 @@ import Memories from "./pages/Memories";
 import Compete from "./pages/Compete";
 import Data from "./pages/Data";
 import Navigation from "./components/Navigation";
+import InstallBanner from "./components/InstallBanner";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { AppThemeProvider } from "./theme/ThemeProvider";
 import {
@@ -104,6 +105,7 @@ function App() {
           <Navigation />
           <DeepLinks />
           <InstallTracker />
+          <InstallBanner />
           <IosWidgetMirror />
           <Analytics />
         </Router>

@@ -61,9 +61,10 @@ const input = (theme) => ({
   color: theme.palette.text.primary,
   fontSize: "0.95rem",
   boxSizing: "border-box",
+  textAlign: "left",
 });
 
-function Leaderboard({ rows, accent, unit, theme }) {
+function Leaderboard({ rows, accent, unit, target, theme }) {
   const max = Math.max(1, ...rows.map((r) => r.value || 0));
   const medals = ["🥇", "🥈", "🥉"];
   return (
@@ -114,9 +115,12 @@ function Leaderboard({ rows, accent, unit, theme }) {
               />
             </div>
           </div>
-          <span style={{ fontWeight: 800, fontSize: "1.05rem" }}>
+          <span style={{ fontWeight: 800, fontSize: "1.05rem", color: r.you ? accent : theme.palette.text.primary }}>
             {(r.value || 0).toLocaleString()}
-            <span style={{ fontSize: "0.7rem", color: theme.palette.text.secondary, marginLeft: 3 }}>
+            {target ? (
+              <span style={{ color: theme.palette.text.secondary, fontWeight: 700 }}>/{target.toLocaleString()}</span>
+            ) : null}
+            <span style={{ fontSize: "0.7rem", color: theme.palette.text.secondary, marginLeft: 3, fontWeight: 600 }}>
               {unit}
             </span>
           </span>
@@ -193,6 +197,7 @@ export default function Compete() {
   const [cMetric, setCMetric] = useState("focus");
   const [cDays, setCDays] = useState(7);
   const [cUnit, setCUnit] = useState("");
+  const [cTarget, setCTarget] = useState("");
 
   // join input
   const [joinInput, setJoinInput] = useState("");
@@ -233,10 +238,12 @@ export default function Compete() {
       metric: cMetric,
       days: Number(cDays),
       unit: cMetric === "manual" ? cUnit : undefined,
+      target: cMetric === "manual" && cTarget ? Number(cTarget) : null,
       displayName: name.trim(),
     });
     setCName("");
     setCUnit("");
+    setCTarget("");
     setCreating(false);
     setSelectedId(ch.id);
   };
@@ -330,14 +337,12 @@ export default function Compete() {
 
       {selected ? (
         <div style={{ width: "100%", maxWidth: 480, display: "flex", flexDirection: "column", gap: "1rem" }}>
-          <button onClick={() => setSelectedId(null)} style={{ ...pill(accentColor, false), alignSelf: "flex-start" }}>
-            <ChevronLeft size={15} /> Back
-          </button>
           <ChallengeDetail
             challenge={selected}
             accent={accentColor}
             mode={mode}
             theme={theme}
+            onBack={() => setSelectedId(null)}
             onManual={setManual}
             onInvite={doInvite}
             onShareProgress={doShareProgress}
@@ -424,13 +429,35 @@ export default function Compete() {
                     ))}
                   </div>
                   {cMetric === "manual" && (
-                    <input
-                      value={cUnit}
-                      onChange={(e) => setCUnit(e.target.value)}
-                      placeholder="Unit (e.g. pages, km, reps)"
-                      maxLength={12}
-                      style={input(theme)}
-                    />
+                    <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                      <div style={{ display: "flex", gap: "0.5rem" }}>
+                        <input
+                          type="number"
+                          inputMode="numeric"
+                          value={cTarget}
+                          onChange={(e) => setCTarget(e.target.value)}
+                          placeholder="Goal (e.g. 100)"
+                          style={{ ...input(theme), flex: 1 }}
+                        />
+                        <input
+                          value={cUnit}
+                          onChange={(e) => setCUnit(e.target.value.replace(/[0-9]/g, ""))}
+                          placeholder="Unit (reps, km…)"
+                          maxLength={12}
+                          style={{ ...input(theme), flex: 1 }}
+                        />
+                      </div>
+                      {(cTarget || cUnit) && (
+                        <div style={{ fontSize: "0.75rem", color: theme.palette.text.secondary }}>
+                          Scores show as{" "}
+                          <strong style={{ color: theme.palette.text.primary }}>
+                            0{cTarget ? `/${cTarget}` : ""}
+                            {cUnit ? ` ${cUnit}` : ""}
+                          </strong>
+                          {" — put just the unit here (e.g. reps), not the number."}
+                        </div>
+                      )}
+                    </div>
                   )}
                   <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
                     <span style={{ fontSize: "0.85rem", color: theme.palette.text.secondary }}>Length</span>
@@ -560,7 +587,7 @@ const roundBtn = (accent) => ({
   cursor: "pointer",
 });
 
-function ChallengeDetail({ challenge, accent, mode, theme, onManual, onInvite, onShareProgress, onImport, onRematch, onDelete }) {
+function ChallengeDetail({ challenge, accent, mode, theme, onBack, onManual, onInvite, onShareProgress, onImport, onRematch, onDelete }) {
   const mv = myValue(challenge);
   const rows = useMemo(() => leaderboard(challenge, mv), [challenge, mv]);
   const dl = daysLeft(challenge);
@@ -586,7 +613,32 @@ function ChallengeDetail({ challenge, accent, mode, theme, onManual, onInvite, o
 
   return (
     <>
-      <div className="card" style={{ padding: "1.1rem", display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+      {/* Top bar: Back (left) · Share board icon (right) */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <button onClick={onBack} style={pill(accent, false)}>
+          <ChevronLeft size={15} /> Back
+        </button>
+        <ShareCardButton
+          renderer={(ctx, props) =>
+            renderLeaderboardCard(ctx, {
+              ...props,
+              title: challenge.name,
+              metricLabel: metric?.label,
+              rows: rows.map((r) => ({ name: r.name, value: r.value, you: r.you })),
+              daysLeft: dl,
+              accent,
+              theme: mode,
+            })
+          }
+          size={CARD_SIZE}
+          fileBaseName="timepassed-challenge"
+          analyticsId="compete"
+          variant="icon"
+          label="Share board"
+        />
+      </div>
+
+      <div className="card" style={{ padding: "1.1rem", display: "flex", flexDirection: "column", gap: "0.4rem", textAlign: "center" }}>
         <div style={{ fontSize: "1.3rem", fontWeight: 800, color: theme.palette.text.primary }}>{challenge.name}</div>
         <div style={{ fontSize: "0.85rem", color: theme.palette.text.secondary }}>
           {metric?.label} · {dl > 0 ? `${dl} ${dl === 1 ? "day" : "days"} left` : "Challenge ended"}
@@ -615,15 +667,47 @@ function ChallengeDetail({ challenge, accent, mode, theme, onManual, onInvite, o
       )}
 
       {isManual && dl > 0 && (
-        <div className="card" style={{ padding: "1rem", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div>
-            <div style={{ fontSize: "0.7rem", letterSpacing: "1px", textTransform: "uppercase", color: theme.palette.text.secondary }}>Your score</div>
-            <div style={{ fontSize: "1.8rem", fontWeight: 800, color: accent }}>{mv} {challenge.unit}</div>
+        <div className="card" style={{ padding: "1rem", display: "flex", flexDirection: "column", gap: "0.65rem" }}>
+          <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: "0.75rem" }}>
+            {challenge.target ? (
+              <div style={{ display: "flex", alignItems: "flex-end", gap: "1rem" }}>
+                <div>
+                  <div style={{ fontSize: "0.6rem", letterSpacing: "1px", textTransform: "uppercase", color: accent, fontWeight: 700 }}>Achieved</div>
+                  <div style={{ fontSize: "1.9rem", fontWeight: 800, color: accent, lineHeight: 1 }}>{mv}</div>
+                </div>
+                <div style={{ fontSize: "1.4rem", color: theme.palette.text.secondary, fontWeight: 400, paddingBottom: 2 }}>/</div>
+                <div>
+                  <div style={{ fontSize: "0.6rem", letterSpacing: "1px", textTransform: "uppercase", color: theme.palette.text.secondary, fontWeight: 700 }}>Goal</div>
+                  <div style={{ fontSize: "1.9rem", fontWeight: 800, color: theme.palette.text.primary, lineHeight: 1 }}>
+                    {challenge.target}
+                    <span style={{ fontSize: "0.8rem", fontWeight: 500, color: theme.palette.text.secondary, marginLeft: 4 }}>{challenge.unit}</span>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <div style={{ fontSize: "0.7rem", letterSpacing: "1px", textTransform: "uppercase", color: theme.palette.text.secondary }}>Your score</div>
+                <div style={{ fontSize: "1.8rem", fontWeight: 800, color: accent }}>
+                  {mv}
+                  <span style={{ fontSize: "1rem", color: theme.palette.text.secondary, fontWeight: 500, marginLeft: 5 }}>{challenge.unit}</span>
+                </div>
+              </div>
+            )}
+            <div style={{ display: "flex", gap: "0.4rem" }}>
+              <button onClick={() => onManual(challenge.id, -1)} style={{ ...pill(accent, false), width: 44, justifyContent: "center" }}>−</button>
+              <button onClick={() => onManual(challenge.id, 1)} style={{ ...pill(accent, true), width: 44, justifyContent: "center" }}>+</button>
+            </div>
           </div>
-          <div style={{ display: "flex", gap: "0.4rem" }}>
-            <button onClick={() => onManual(challenge.id, -1)} style={{ ...pill(accent, false), width: 44, justifyContent: "center" }}>−</button>
-            <button onClick={() => onManual(challenge.id, 1)} style={{ ...pill(accent, true), width: 44, justifyContent: "center" }}>+</button>
-          </div>
+          {challenge.target ? (
+            <div>
+              <div style={{ height: 8, borderRadius: 4, background: "rgba(127,127,127,0.15)", overflow: "hidden" }}>
+                <div style={{ width: `${Math.max(0, Math.min(100, (mv / challenge.target) * 100))}%`, height: "100%", background: accent, transition: "width 0.4s" }} />
+              </div>
+              <div style={{ fontSize: "0.72rem", color: theme.palette.text.secondary, marginTop: 4, textAlign: "right" }}>
+                {Math.round(Math.min(100, (mv / challenge.target) * 100))}% of goal
+              </div>
+            </div>
+          ) : null}
         </div>
       )}
 
@@ -632,7 +716,7 @@ function ChallengeDetail({ challenge, accent, mode, theme, onManual, onInvite, o
         <div style={{ fontSize: "0.7rem", letterSpacing: "1px", textTransform: "uppercase", color: theme.palette.text.secondary, marginBottom: "0.75rem" }}>
           Leaderboard
         </div>
-        <Leaderboard rows={rows} accent={accent} unit={challenge.unit} theme={theme} />
+        <Leaderboard rows={rows} accent={accent} unit={challenge.unit} target={challenge.target} theme={theme} />
       </div>
 
       {/* Update the board with a friend's score code */}
@@ -654,8 +738,8 @@ function ChallengeDetail({ challenge, accent, mode, theme, onManual, onInvite, o
         </div>
       </div>
 
-      {/* Invite + share */}
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+      {/* Invite + share (centered) */}
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", justifyContent: "center" }}>
         <button onClick={() => onInvite(challenge)} style={pill(accent, true)}>
           <UserPlus size={15} /> Invite friends
         </button>
@@ -665,24 +749,6 @@ function ChallengeDetail({ challenge, accent, mode, theme, onManual, onInvite, o
         <button onClick={() => onShareProgress(challenge)} style={pill(accent, false)}>
           <Share2 size={15} /> Share scores
         </button>
-        <ShareCardButton
-          renderer={(ctx, props) =>
-            renderLeaderboardCard(ctx, {
-              ...props,
-              title: challenge.name,
-              metricLabel: metric?.label,
-              rows: rows.map((r) => ({ name: r.name, value: r.value, you: r.you })),
-              daysLeft: dl,
-              accent,
-              theme: mode,
-            })
-          }
-          size={CARD_SIZE}
-          fileBaseName="timepassed-challenge"
-          analyticsId="compete"
-          variant="pill"
-          label="Share board"
-        />
       </div>
 
       {/* Scannable invite QR */}
@@ -695,12 +761,15 @@ function ChallengeDetail({ challenge, accent, mode, theme, onManual, onInvite, o
         </div>
       )}
 
-      <button
-        onClick={() => onDelete(challenge.id)}
-        style={{ ...pill(accent, false), alignSelf: "center", color: "#ef4444", borderColor: "#ef444455" }}
-      >
-        <Trash2 size={15} /> {challenge.owner ? "Delete challenge" : "Leave challenge"}
-      </button>
+      {/* Delete — labelled button, a little below the action buttons */}
+      <div style={{ display: "flex", justifyContent: "center", marginTop: "0.5rem" }}>
+        <button
+          onClick={() => onDelete(challenge.id)}
+          style={{ ...pill(accent, false), color: "#ef4444", border: "1px solid #ef444455" }}
+        >
+          <Trash2 size={15} /> {challenge.owner ? "Delete challenge" : "Leave challenge"}
+        </button>
+      </div>
     </>
   );
 }

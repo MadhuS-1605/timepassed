@@ -365,6 +365,7 @@ export default function Goals() {
             flexDirection: "column",
             gap: "0.9rem",
             marginBottom: "1.25rem",
+            textAlign: "left",
           }}
         >
           <input
@@ -453,6 +454,7 @@ export default function Goals() {
           display: "flex",
           flexDirection: "column",
           gap: "0.85rem",
+          textAlign: "left",
         }}
       >
         {goals.length === 0 && !adding && (
@@ -547,6 +549,7 @@ const textInput = (theme) => ({
   color: theme.palette.text.primary,
   fontSize: "0.95rem",
   boxSizing: "border-box",
+  textAlign: "left",
 });
 
 const segBtn = (accent, active) => ({
